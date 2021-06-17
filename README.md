@@ -5,6 +5,8 @@ Juego de batalla naval, hecho en C++, para la materia Laboratorio 2.
 
 ![image](https://user-images.githubusercontent.com/76019584/122438715-618fcc00-cf71-11eb-92dd-a9d271bcc89a.png)
 
+Trello: https://trello.com/b/aSWu0TsL/batalla-naval-lab2
+
 ### Integrantes de la cátedra
 - Kloster, Daniel - Profesor
 - Wener, Maximiliano - Ayudante
