@@ -14,12 +14,14 @@ Trello: https://trello.com/b/aSWu0TsL/batalla-naval-lab2
 ### Integrantes del grupo
 - María Julia Archieri
 - Rodriguez Ivan Agustin
-- Manuel
+- Manuel Granada
 
 ### Descripcion
-Es una matriz que tiene escondidas varias flotas donde hay que deducir donde están de acuerdo a ciertas pistas. Se recorre la matriz con el cursor y vamos completando los elementos con lo que creemos que va en ese lugar.
+1er modo de juego en contra de la computadora: tanto el jugador como el BOT colocan naves en un tablero 10x10. El objetivo es destruir las naves del tablero enemigo utilizando coordenadas (X,Y).
+2do modo de juego (WIP): En una matriz que tiene escondidas varias flotas, hay que deducir donde están de acuerdo a ciertas pistas. Se recorre la matriz con el cursor y vamos completando los elementos con lo que creemos que va en ese lugar.
 
 ### Clases a desarrollar
+- **Clase Nave:** Esta clase corresponde a las propiedades de una nave (Salud, tamaño, orientacion y id).
 - **Clase Elemento:** Esta clase corresponde a una unidad del gráfico correspondiente a la matriz con sus flotas. Tendrá propiedades como x.y de posición, tipo de elemento (agua, submarino, cuerpo de flota, cola de flota, etc.) para seleccionarlo cuando resolvemos el elemento en de esa posición.
 - **Clase Matriz:**	Es la matriz de elementos que se usará para la resolución del juego. Tendrá propiedades como el ancho y el alto de la matriz, el dibujo de la misma. Métodos de generación de juegos nuevos, supervisión del desarrollo y comprobación del éxito de la resolución.
 - **Clase Jugador:** Esta clase guardará el nombre del jugador, fecha y puntaje obtenido deducido por el tiempo de resolución.
