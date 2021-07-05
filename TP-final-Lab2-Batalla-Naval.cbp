@@ -35,7 +35,7 @@
 		<Unit filename="Clases.h" />
 		<Unit filename="ComportamientoIA.h" />
 		<Unit filename="Funcs.h" />
-		<Unit filename="main.cpp" />
+		<Unit filename="TP-final-Lab2-Batalla-Naval.cpp" />
 		<Unit filename="rlutil.h" />
 		<Unit filename="utilidades.h" />
 		<Extensions>

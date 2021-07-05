@@ -1,0 +1,34 @@
+# depslib dependency file v1.0
+1625518483 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval.cpp
+	<Windows.h>
+	<assert.h>
+	<string>
+	<sstream>
+	"rlutil.h"
+	"Clases.h"
+	"ComportamientoIA.h"
+	"Funcs.h"
+
+1571584339 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\rlutil.h
+	<iostream>
+	<string>
+	<cstdio>
+	<stdio.h>
+	<string.h>
+	<windows.h>
+	<conio.h>
+	<termios.h>
+	<unistd.h>
+	<sys/ioctl.h>
+	<sys/types.h>
+	<sys/time.h>
+
+1625289585 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\clases.h
+
+1625329614 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\comportamientoia.h
+	<cstdlib>
+	<ctime>
+	<iostream>
+
+1625522735 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\funcs.h
+
