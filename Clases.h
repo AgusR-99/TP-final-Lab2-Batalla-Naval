@@ -117,6 +117,7 @@ public:
 	void IniciarTabla();
 	//Muestra la tabla
 	void DibujarTabla();
+	void DibujarTabla(int, int);
 	//Colocar la nave en el tablero dada una posicion en X e Y
 	int ColocarNave(Nave nave, Matriz tablero, int posY, int posX);
 	//La nave es colocada horizontalmente
@@ -138,13 +139,34 @@ void Matriz::IniciarTabla(){
 		}
 	}
 }
-void Matriz::DibujarTabla(){
+
+void Matriz::DibujarTabla() {
+	cout << "  ";
+	locate(POSICION_MATRIX_X + 2, POSICION_MATRIX_Y);
+	for (int x = 0; x < filas; x++) {
+		cout << x << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < filas; i++) {
+		locate(POSICION_MATRIX_X, POSICION_MATRIX_Y + i + 1);
+		cout << i << " ";
+		for (int j = 0; j < columnas; j++) {
+			cout << arr[i][j].getSprite();
+			cout << " ";
+		}
+		cout << endl;
+	}
+}
+
+void Matriz::DibujarTabla(int offsetX, int offsetY){
 		cout << "  ";
+		locate(POSICION_MATRIX_X + 2 + offsetX, POSICION_MATRIX_Y + offsetY);
 		for (int x = 0; x < filas; x++) {
 			cout << x << " ";
 		}
 		cout << endl;
 		for (int i = 0; i < filas; i++) {
+			locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + i + 1 + offsetY);
 			cout << i << " ";
 			for (int j = 0; j < columnas; j++) {
 				cout << arr[i][j].getSprite();

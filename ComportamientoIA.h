@@ -6,8 +6,9 @@
 void colocarNaveIA(Matriz, int i);
 void generarCoordenadas(int&, int&);
 void generarOrientacion(char&);
+void cazarNave(Matriz, int, int, int intento, int estado);
 void colocarNaveIA(Matriz tablero, int i){
-	srand((unsigned)time(0));
+	
 	int x, y, validacion;
 	char r;
 	do {
@@ -19,10 +20,36 @@ void colocarNaveIA(Matriz tablero, int i){
 	} while (validacion == -1 or validacion == 0);
 }
 
+void cazarNave(Matriz tablero, int& x, int& y, int intento, int estado) {
+	switch (intento){
+	case 1:
+		if (estado == -2 or estado == -3) x--;
+		else x++;
+		break;
+	case 2:
+		if (estado == -2 or estado == -3)
+		break;
+	case 3:
+
+		break;
+	case 4:
+
+		break;
+	case 5:
+
+		break;
+	case 6:
+
+		break;
+	default:
+		break;
+	}
+}
+
 void generarCoordenadas(int& x, int& y) {
-	//0 hasta 10
+	//0 a 9
 	x = (rand() % 10);
-	//0 hasta 10
+	//0 a 9
 	y = (rand() % 10);
 }
 void generarOrientacion(char& r) {

@@ -145,6 +145,11 @@
     <ClInclude Include="Clases.h" />
     <ClInclude Include="ComportamientoIA.h" />
     <ClInclude Include="Funcs.h" />
+    <ClInclude Include="rlutil.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TP-final-Lab2-Batalla-Naval.cbp" />
+    <None Include="TP-final-Lab2-Batalla-Naval.exe" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

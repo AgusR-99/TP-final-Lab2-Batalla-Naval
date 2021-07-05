@@ -23,5 +23,18 @@
     <ClInclude Include="Clases.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ComportamientoIA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Funcs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rlutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TP-final-Lab2-Batalla-Naval.cbp" />
+    <None Include="TP-final-Lab2-Batalla-Naval.exe" />
   </ItemGroup>
 </Project>
