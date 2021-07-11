@@ -3,25 +3,35 @@
 #include <assert.h>
 #include <string>
 #include <sstream>
+#include <iomanip>
 using namespace std;
 #include "rlutil.h"
 using namespace rlutil;
 stringstream buffer;
 
-enum{
+enum {
 	HIGH,
 	MEDIUM,
-	LOW,
+	LOW
+};
+
+enum {
 	INSTANT,
 	FAST,
 	NORMAL,
 	SLOW
 };
 
+enum {
+	GOLPE,
+	FALLO,
+	HUNDIR,
+};
+
 int setFreq(const int value) {
 	switch (value) {
 		case HIGH  : return 2000;
-		case MEDIUM: return 1000;
+		case MEDIUM: return 750;
 		case LOW   : return 500;
 	}
 }
@@ -35,13 +45,14 @@ int setDuration(const int value) {
 	}
 }
 
-int PHIGH = 1200;
-int PMEDIUM = 800;
-int PLOW = 500;
+int setMod(const int value) {
+	switch (value) {
+	case GOLPE : return 50;
+	case FALLO : return -5;
+	case HUNDIR: return 250;	
+	}
+}
 
-int DNORMAL = 15;
-int DSHORT = 5;
-int DLONG = 30;
 const int ANCHO_VENTANA = 80;
 const int ALTO_VENTANA = 40;
 const int POSICION_MATRIX_X = 20;

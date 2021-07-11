@@ -33,7 +33,7 @@ void mostrarInterfazComienzoRapido(int offsetX, int offsetY);
 //Muestra los turnos en la interfaz
 void mostrarInterfazTurnos(int, int, int);
 //Muestra las acciones en la interfaz
-void mostrarInterfazAcciones(int estadoJugador, int estadoIA, int, int, int, int, int, int, int, int, int);
+void mostrarInterfazAcciones(int est0, int est1, int res0, int res1, int turn, int x, int y, int xJug, int yJug, int xIA, int yIA, int score, int oldScore, float mult);
 //Muestra en la interfaz las naves restantes
 void mostrarInterfazNavesRestantes(int, int, int, int);
 //Muestra el resultado de la partida en la interfaz
@@ -54,7 +54,10 @@ string setearCondicion(bool);
 void mostrarTextoAnimado(string texto, int sleepDuration);
 //Mostrar texto animado con sonidos
 void mostrarTextoAnimado(string texto, int beepFreq, int beepDuration);
-
+//Muestra el cambio en puntuaje mediante una animacion
+void rollearPuntuaje(int inicio, int objetivo, int offsetX, int offsetY);
+//Modificar puntuaje (sumar o restar)
+int modificarPuntuaje(int puntuaje, int mod, float mult);
 void iniciarJuego() {
     int estadoJugador = -1, estadoIA = -1, comienzoRapido = -2;
     int turno = 0;
@@ -62,6 +65,8 @@ void iniciarJuego() {
     bool condicionV = false;
     bool condicionD = false;
     bool bInstant = false;
+    int puntuaje = 0, puntuajeOld = 0;
+    float multiplicador = 1.0;
     string condicion;
     Matriz tableroJugador(10, 10);
     Matriz tableroIA(10, 10);
@@ -88,15 +93,41 @@ void iniciarJuego() {
         do { //Turno jugador
             system("cls");
             mostrarTableros(tableroJugador, tableroIA);
-            mostrarInterfazAcciones(estadoJugador, estadoIA, restantesJugador, restantesIA, turno, 0, 12, tempXJugador, tempYJugador, tempXIA, tempYIA);
+            mostrarInterfazAcciones(estadoJugador, estadoIA, restantesJugador, restantesIA, turno, 0, 12, tempXJugador, tempYJugador, tempXIA, tempYIA, puntuaje, puntuajeOld, multiplicador);
+            puntuajeOld = puntuaje;
             ingresarDatos(x, y, 17, 11);
             atacarPosicion(tableroIA, restantesIA, estadoJugador, x, y, true);
+            //Movimiento invalido
+            if (estadoJugador == -2 or estadoJugador == -3) { 
+                estadoIA = -1;
+                Beep(200, 250);
+            }
         } while (estadoJugador == -2 || estadoJugador == -3); //Mientras se intente hacer un movimiento invalido, no pasara de turno
+        if (estadoJugador == 0) { //FALLO
+            //Multiplicador se revierte
+            multiplicador = 1.0;
+            //Puntuaje disminuye
+            puntuaje = modificarPuntuaje(puntuaje, FALLO, multiplicador);
+        }
+        else if (estadoJugador == 1) { //GOLPE
+            //Puntuaje aumenta
+            puntuaje = modificarPuntuaje(puntuaje, GOLPE, multiplicador);
+            //Multiplicador aumenta
+            if (multiplicador < 1.5) multiplicador = multiplicador + 0.1;
+        }
+        else if (estadoJugador == 2) { //NAVE HUNDIDA
+            //Puntuaje aumenta
+            puntuaje = modificarPuntuaje(puntuaje, HUNDIR, multiplicador);
+            //Multiplicador aumenta
+            if (multiplicador < 1.5) multiplicador = multiplicador + 0.1;
+        }
         //Se guardan las coordenadas validadas para ser mostradas al finalizar el turno
         tempXJugador = x;
         tempYJugador = y;
+        //Si el puntuaje es negativo, setear a 0. Si el puntuaje es mayor a 9999, setear a 9999
+        if (puntuaje < 0) puntuaje = 0;
+        else if (puntuaje > 9999) puntuaje = 9999;
         do { //Turno IA
-            cout << "\nIA Pensando...\n";
             generarCoordenadas(x, y);
             atacarPosicion(tableroJugador, restantesJugador, estadoIA, x, y, false);
         } while (estadoIA == -2); //Mientras se intente hacer un movimiento invalido, no pasara de turno
@@ -111,7 +142,7 @@ void iniciarJuego() {
     else condicion = setearCondicion(0);
     system("cls");
     mostrarTableros(tableroJugador, tableroIA);
-    mostrarInterfazAcciones(estadoJugador, estadoIA, restantesJugador, restantesIA, turno, 0, 12, tempXJugador, tempYJugador, tempXIA, tempYIA);
+    mostrarInterfazAcciones(estadoJugador, estadoIA, restantesJugador, restantesIA, turno, 0, 12, tempXJugador, tempYJugador, tempXIA, tempYIA, puntuaje, puntuajeOld, multiplicador);
     mostrarInterfazCondicion(condicion);
 }
 
@@ -129,6 +160,7 @@ void ingresarNave(Matriz tableroJugador, Matriz tableroIA, int i, int& comienzoR
         mostrarTableros(tableroJugador, tableroIA);
         if (comienzoRapido == -2) {
             mostrarInterfazComienzoRapido(1, 13);
+            
             ingresarDatos(r, 40, 13);
             comienzoRapido = validarRespuesta(r);
         }
@@ -157,6 +189,7 @@ void ingresarNave(Matriz tableroJugador, Matriz tableroIA, int i, int& comienzoR
             if (validacion == 0) flag0 = true;
             else if (validacion == -1) flag1 = true;
             else flag2 = true;
+            if (flag0 == true or flag1 == true or flag2 == true) Beep(200, 250);
         }
         else {
             generarCoordenadas(x, y);
@@ -203,6 +236,7 @@ int validarOrientacion(char r){
 }
 int validarRespuesta(char value) {
     if (value != 'y' and value != 'Y' and value != 'n' and value != 'N') {
+        Beep(200, 250);
         return -1;
     }
     else if (value == 'y' or value == 'Y') return 1;
@@ -313,7 +347,7 @@ void mostrarInterfazIngreso(int i, char r, int offsetX, int offsetY, bool bInsta
     locate(POSICION_MATRIX_X + offsetX+ 16, POSICION_MATRIX_Y + 5 + offsetY);
     mostrarTextoAnimado("v/h", normalD);
 }
-void mostrarInterfazAcciones(int estadoJugador, int estadoIA, int restantesJugador, int restantesIA, int turno, int offsetX, int offsetY, int xJugador, int yJugador, int xIA, int yIA) {
+void mostrarInterfazAcciones(int estadoJugador, int estadoIA, int restantesJugador, int restantesIA, int turno, int offsetX, int offsetY, int xJugador, int yJugador, int xIA, int yIA, int puntuaje, int puntuajeOld,  float mult) {
     mostrarInterfazNavesRestantes(restantesJugador, restantesIA, offsetX, offsetY);
     mostrarInterfazTurnos(turno, offsetX, offsetY + 1);
     locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 2 + offsetY);
@@ -334,6 +368,12 @@ void mostrarInterfazAcciones(int estadoJugador, int estadoIA, int restantesJugad
     cout << "ATAQUE\n";
     locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 5 + offsetY);
     cout << "Coordenadas (X Y) >> ";
+    locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 6 + offsetY);
+    locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 7 + offsetY);
+    cout << "Score:";
+    locate(POSICION_MATRIX_X + offsetX + 12, POSICION_MATRIX_Y + 7 + offsetY);
+    cout << "Mult:" << mult;
+    rollearPuntuaje(puntuajeOld, puntuaje, POSICION_MATRIX_X + 7 +  + offsetX, POSICION_MATRIX_Y + 7 + offsetY);
 }
 void mostrarInterfazTurnos(int turno, int offsetX, int offsetY) {
     locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + offsetY);
@@ -404,6 +444,38 @@ void mostrarCoordenadas(int x, int y, int frequency) {
     mostrarTextoAnimado(buffer.str(), NORMAL, setFreq(frequency));
     buffer.str("");
 }
+void mostrarNave(int id, int length) {
+    for (size_t i = 0; i < length; i++){
+        buffer << spriteList[id + 4];
+    }
+    mostrarTextoAnimado(buffer.str(), NORMAL);
+}
+//Mostrar cosas con animaciones
+void rollearPuntuaje(int inicio, int objetivo, int x, int y) {
+    //Si la diferenca es mayor a 100, la animacion sera mas rapida
+    int velocidad = 1;
+    int dif = objetivo - inicio;
+    if (dif > 100) velocidad = 4;
+    hidecursor();
+    if (inicio < objetivo) {
+        for (int i = inicio; i < objetivo; i = i + velocidad) {
+            locate(x, y);
+            cout << setw(4) << setfill('0') << i;
+            Sleep(1);
+        }
+    }
+    else if (inicio > objetivo) {
+        int dif = inicio - objetivo;
+        for (int i = inicio; i > objetivo; i = i - velocidad) {
+            locate(x, y);
+            cout << setw(4) << setfill('0') << i;
+            Sleep(1);
+        }
+    }
+    locate(x, y);
+    cout << setw(4) << setfill('0') << objetivo;
+    showcursor();
+}
 void mostrarTextoAnimado(string texto, const int sleepDuration) {
     int x = 0;
     while (texto[x] != '\0') {
@@ -420,13 +492,7 @@ void mostrarTextoAnimado(string texto, const int beepDuration, const int beepFre
         x++;
     };
 }
-void mostrarNave(int id, int length) {
-    for (size_t i = 0; i < length; i++){
-        buffer << spriteList[id + 4];
-    }
-    mostrarTextoAnimado(buffer.str(), NORMAL);
-}
-//Get stuff
+//Obtener cosas
 int navesRestantes(Nave nave[]) {
     int restantes = 0;
     for (int i = 0; i < cantidad; i++) {
@@ -435,6 +501,9 @@ int navesRestantes(Nave nave[]) {
         }
     }
     return restantes;
+}
+int modificarPuntuaje(int puntuaje, int mod, float mult) {
+    return puntuaje + setMod(mod) * mult;
 }
 string setearCondicion(bool victoria) {
     string str;
@@ -481,7 +550,6 @@ void ingresarDatos(int& x, int& y, int offsetX, int offsetY) {
     cin >> x;
     locate(POSICION_MATRIX_X + 4 + 2 + offsetX, POSICION_MATRIX_Y + 6 + offsetY);
     cin >> y;
-    locate(POSICION_MATRIX_X + 12 + offsetX, POSICION_MATRIX_Y + 6 + offsetY);
 }
 void ingresarDatos(char& value, int offsetX, int offsetY) {
     locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + offsetY);
