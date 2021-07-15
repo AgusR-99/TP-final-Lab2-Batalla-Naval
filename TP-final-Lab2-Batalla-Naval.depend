@@ -1,13 +1,9 @@
 # depslib dependency file v1.0
-1625518483 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval.cpp
-	<Windows.h>
-	<assert.h>
-	<string>
-	<sstream>
+1626341348 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval.cpp
+	<windows.h>
 	"rlutil.h"
-	"Clases.h"
-	"ComportamientoIA.h"
-	"Funcs.h"
+	"Gamemode 1v1/FuncsMulti.h"
+	"Gamemode Singleplayer/FuncsSingle.h"
 
 1571584339 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\rlutil.h
 	<iostream>
@@ -31,4 +27,30 @@
 	<iostream>
 
 1625522735 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\funcs.h
+
+1626336250 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\gamemode 1v1\funcsmulti.h
+	<assert.h>
+	<cstdlib>
+	<string>
+	<sstream>
+	<iomanip>
+	<ctime>
+	"Clases.h"
+	"ComportamientoIA.h"
+	"UI.h"
+
+1626330789 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\gamemode 1v1\clases.h
+
+1626328178 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\gamemode 1v1\comportamientoia.h
+	<cstdlib>
+	<ctime>
+	<iostream>
+
+1626331434 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\gamemode 1v1\ui.h
+
+1626341533 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\gamemode singleplayer\funcssingle.h
+	<stdio.h>
+	<stdlib.h>
+	<conio.h>
+	<time.h>
 

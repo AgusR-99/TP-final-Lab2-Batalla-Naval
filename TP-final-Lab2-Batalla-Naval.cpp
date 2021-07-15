@@ -1,98 +1,117 @@
 ﻿#include <iostream>
-#include <Windows.h>
-#include <assert.h>
-#include <string>
-#include <sstream>
-#include <iomanip>
+#include <windows.h>
 using namespace std;
 #include "rlutil.h"
 using namespace rlutil;
-stringstream buffer;
+#include "Gamemode 1v1/FuncsMulti.h"
+#include "Gamemode Singleplayer/FuncsSingle.h"
 
-enum {
-	HIGH,
-	MEDIUM,
-	LOW
-};
 
-enum {
-	INSTANT,
-	FAST,
-	NORMAL,
-	SLOW
-};
+int main() {
+    srand((unsigned)time(0));
+    setlocale(LC_ALL, "spanish");
+    setColor(WHITE);
+    setBackgroundColor(BLACK);
+    saveDefaultColor();
+    CONSOLE_FONT_INFOEX cfi;
+    cfi.cbSize = sizeof(cfi);
+    cfi.nFont = 0;
+    cfi.dwFontSize.X = 0; // Ancho de cada caracter
+    cfi.dwFontSize.Y = 24; // Altura
+    cfi.FontFamily = FF_DONTCARE;
+    cfi.FontWeight = FW_NORMAL;
+    std::wcscpy(cfi.FaceName, L"Consolas"); // Elegir fuente
+    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+    while (true) {
+        AjustarVentana(40,20);
+        resetColor();
+        system("cls");
+        bool running = true;
+        int menu_item = 0, x = 4, y = 2;
+        int bottom = x;
+        int top = y;
+        int qItem = 2;
+        hidecursor();
+        gotoxy(x, 0);
+        mostrarTextoAnimado("BIENVENIDO A LA BATALLA NAVAL", 50, 400);
+        gotoxy(x - 2, 2);
+        cout << "->";
+        while (running == true) {
 
-enum {
-	GOLPE,
-	FALLO,
-	HUNDIR,
-};
+            gotoxy(x, 2);
+            cout << "Jugar vs IA";
+            gotoxy(x, 3);
+            cout << "Jugar vs Enigma";
+            gotoxy(x, 4);
+            cout << "Salir del programa";
 
-int setFreq(const int value) {
-	switch (value) {
-		case HIGH  : return 2000;
-		case MEDIUM: return 750;
-		case LOW   : return 500;
-	}
-}
+            system("pause>nul");
+            if (GetAsyncKeyState(VK_DOWN) && y != bottom) {
+                gotoxy(x - 2, y);
+                cout << "  ";
+                y++;
+                gotoxy(x - 2, y);
+                cout << "->";
+                Beep(1000, 50);
+                menu_item++;
+                continue;
+            }
+            else if (GetAsyncKeyState(VK_DOWN) && y == bottom) {
+                gotoxy(x - 2, y);
+                cout << "  ";
+                y = top;
+                gotoxy(x - 2, y);
+                cout << "->";
+                Beep(1000, 50);
+                menu_item = 0;
+                continue;
+            }
 
-int setDuration(const int value) {
-	switch (value) {
-	case INSTANT: return 0;
-	case FAST   : return 5;
-	case NORMAL : return 15;
-	case SLOW   : return 30;
-	}
-}
+            if (GetAsyncKeyState(VK_UP) && y != top) {
+                gotoxy(x - 2, y);
+                cout << "  ";
+                y--;
+                gotoxy(x - 2, y);
+                cout << "->";
+                Beep(1000, 50);
+                menu_item--;
+                continue;
+            }
+            else if (GetAsyncKeyState(VK_UP) && y == top) {
+                gotoxy(x - 2, y);
+                cout << "  ";
+                y = bottom;
+                gotoxy(x - 2, y);
+                cout << "->";
+                Beep(1000, 50);
+                menu_item = qItem;
+                continue;
+            }
+            if (GetAsyncKeyState(VK_ESCAPE)) return 0;
+            if (GetAsyncKeyState(VK_RETURN)) {
+                Beep(2000, 50);
+                switch (menu_item) {
 
-int setMod(const int value) {
-	switch (value) {
-	case GOLPE : return 50;
-	case FALLO : return -5;
-	case HUNDIR: return 250;	
-	}
-}
+                case 0: {
+                    iniciarJuegoMulti();
+                    running = false;
+                    break;
+                }
 
-const int ANCHO_VENTANA = 80;
-const int ALTO_VENTANA = 40;
-const int POSICION_MATRIX_X = 20;
-const int POSICION_MATRIX_Y = 1;
+                case 1: {
+                    iniciarJuegoSingle();
+                    running = false;
+                    break;
+                }
 
-#include "Clases.h"
-#include "ComportamientoIA.h"
-#include "Funcs.h"
+                case 2: {
+                    return 0;
+                    break;
+                }
 
-bool AjustarVentana(int Ancho, int Alto);
+                }
+            }
 
-int main(){
-	srand((unsigned)time(0));
-	setlocale(LC_ALL, "spanish");
-    AjustarVentana(ANCHO_VENTANA, ALTO_VENTANA);
-	setColor(WHITE);
-	setBackgroundColor(BLACK);
-	saveDefaultColor();
-    iniciarJuego();
-    return 0;
-}
-
-bool AjustarVentana(int Ancho, int Alto) {
-	_COORD Coordenada;
-	Coordenada.X = Ancho;
-	Coordenada.Y = Alto;
-
-	_SMALL_RECT Rect;
-	Rect.Top = 0;
-	Rect.Left = 0;
-	Rect.Right = Ancho - 1;
-	Rect.Bottom = Alto - 1;
-
-	// Obtener el handle de la consola
-	HANDLE hConsola = GetStdHandle(STD_OUTPUT_HANDLE);
-
-	// Ajustar el buffer al nuevo tamaño
-	SetConsoleScreenBufferSize(hConsola, Coordenada);
-
-	// Cambiar tamaño de consola a lo especificado en el buffer
-	SetConsoleWindowInfo(hConsola, TRUE, &Rect);
-	return TRUE;
+        }
+    }
 }

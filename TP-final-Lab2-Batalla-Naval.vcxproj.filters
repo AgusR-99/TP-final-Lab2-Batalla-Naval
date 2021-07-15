@@ -20,21 +20,27 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Clases.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ComportamientoIA.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Funcs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="rlutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gamemode 1v1\ComportamientoIA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gamemode 1v1\Clases.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gamemode Singleplayer\FuncsSingle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gamemode 1v1\FuncsMulti.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gamemode 1v1\UI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TP-final-Lab2-Batalla-Naval.cbp" />
-    <None Include="TP-final-Lab2-Batalla-Naval.exe" />
+    <None Include="Gamemode Singleplayer\juegos.dat" />
   </ItemGroup>
 </Project>

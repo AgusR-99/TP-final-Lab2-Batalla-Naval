@@ -32,9 +32,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Clases.h" />
-		<Unit filename="ComportamientoIA.h" />
-		<Unit filename="Funcs.h" />
+		<Unit filename="Gamemode 1v1/Clases.h" />
+		<Unit filename="Gamemode 1v1/ComportamientoIA.h" />
+		<Unit filename="Gamemode 1v1/FuncsMulti.h" />
+		<Unit filename="Gamemode 1v1/UI.h" />
+		<Unit filename="Gamemode Singleplayer/FuncsSingle.h" />
+		<Unit filename="Gamemode Singleplayer/juegos.dat" />
 		<Unit filename="TP-final-Lab2-Batalla-Naval.cpp" />
 		<Unit filename="rlutil.h" />
 		<Unit filename="utilidades.h" />
