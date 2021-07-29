@@ -38,6 +38,9 @@
     <ClInclude Include="Gamemode 1v1\UI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Gamemode 1v1\rlutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TP-final-Lab2-Batalla-Naval.cbp" />

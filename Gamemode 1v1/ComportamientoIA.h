@@ -3,21 +3,23 @@
 #include <ctime>
 #include <iostream>
 
-void colocarNaveIA(Matriz, int i);
+void colocarNaveIA(Matriz, int i, Nave[]);
 void generarCoordenadas(int&, int&);
 void generarOrientacion(char&);
 void cazarNave(int& x, int& y, const int direccion);
-void colocarNaveIA(Matriz tablero, int i){
-	
-	int x, y, validacion;
+void colocarNaveIA(Matriz tablero, int id, Nave nave[]){
+	nave[id].CrearNave(id);
+	int x, y;
+	Error validacion;
 	char r;
 	do {
-		generarCoordenadas(x, y);
 		generarOrientacion(r);
-		shipIA[i].CrearNave(r, i);
-		validacion = tablero.ColocarNave(shipIA[i], tablero, y, x);
+		generarCoordenadas(x, y);
+		validacion = validarColocacion(tablero, y, x, nave[id].getTamanio(), r);
 		//Si no se cumple la validacion, se crean nuevos valores
-	} while (validacion == -1 or validacion == 0);
+	} while (validacion == Error::COLISION or validacion == Error::FUERA);
+	nave[id].setOrientacion(r);
+	tablero.ColocarNave(tablero, y, x, nave[id]);
 }
 
 void cazarNave(int& x, int& y, const int direccion) {

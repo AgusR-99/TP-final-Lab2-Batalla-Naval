@@ -92,6 +92,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -108,6 +109,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -145,6 +147,7 @@
     <ClInclude Include="Gamemode 1v1\Clases.h" />
     <ClInclude Include="Gamemode 1v1\ComportamientoIA.h" />
     <ClInclude Include="Gamemode 1v1\FuncsMulti.h" />
+    <ClInclude Include="Gamemode 1v1\rlutil.h" />
     <ClInclude Include="Gamemode Singleplayer\FuncsSingle.h" />
     <ClInclude Include="Gamemode 1v1\UI.h" />
     <ClInclude Include="rlutil.h" />

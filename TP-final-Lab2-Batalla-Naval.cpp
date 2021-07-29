@@ -1,13 +1,21 @@
 ﻿#include <iostream>
 #include <windows.h>
+#include <mmsystem.h>
+#include <cwchar>
 using namespace std;
-#include "rlutil.h"
+#include "Gamemode 1v1/rlutil.h"
 using namespace rlutil;
 #include "Gamemode 1v1/FuncsMulti.h"
-#include "Gamemode Singleplayer/FuncsSingle.h"
 
-
+void desplazarAbajo(int& x, int& y, int& menu_item);
+void desplazarArriba(int& x, int& y, int& menu_item);
+void desplazarTop(int& x, int& y, int& menu_item, int qItem);
+void desplazarBottom(int& x, int& y, int& menu_item, int qItem, int bottom);
+void color(int);
 int main() {
+    setConsoleTitle("Batalla naval");
+    bool musica = false;
+    int set[] = { 7,7,7 };
     srand((unsigned)time(0));
     setlocale(LC_ALL, "spanish");
     setColor(WHITE);
@@ -23,68 +31,60 @@ int main() {
     std::wcscpy(cfi.FaceName, L"Consolas"); // Elegir fuente
     SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
     while (true) {
+        if (musica == false) {
+            PlaySound(TEXT("music/menu.wav"), NULL, SND_ASYNC | SND_LOOP);
+            musica = true;
+        }
         AjustarVentana(40,20);
         resetColor();
         system("cls");
         bool running = true;
-        int menu_item = 0, x = 4, y = 2;
-        int bottom = x;
-        int top = y;
+        int menu_item = 0, x = 11, y = 2;
         int qItem = 2;
+        int bottom = 4;
+        int top = y;
         hidecursor();
-        gotoxy(x, 0);
-        mostrarTextoAnimado("BIENVENIDO A LA BATALLA NAVAL", 50, 400);
-        gotoxy(x - 2, 2);
-        cout << "->";
+        locate(8, 3);
+        mostrarTextoAnimado("BIENVENIDO A LA BATALLA NAVAL", Duracion::LENTO, Frecuencia::BAJA);
         while (running == true) {
-
-            gotoxy(x, 2);
-            cout << "Jugar vs IA";
-            gotoxy(x, 3);
-            cout << "Jugar vs Enigma";
-            gotoxy(x, 4);
+            set[0] = 15;
+            set[1] = 15;
+            set[2] = 15;
+            if (menu_item == 0) set[0] = 12;
+            if (menu_item == 1) set[1] = 12;
+            if (menu_item == 2) set[2] = 12;
+            gotoxy(x + 8, 9);
+            color(set[0]);
+            cout << "Jugar";
+            gotoxy(x + 5, 10);
+            color(set[1]);
+            cout << "Leaderboard";
+            gotoxy(x + 2, 11);
+            color(set[2]);
             cout << "Salir del programa";
+
+            setColor(LIGHTBLUE);
+            locate(x - 1, 18);
+            cout << "[Enter]";
+            resetColor();
+            cout << " - Elegir opcion";
 
             system("pause>nul");
             if (GetAsyncKeyState(VK_DOWN) && y != bottom) {
-                gotoxy(x - 2, y);
-                cout << "  ";
-                y++;
-                gotoxy(x - 2, y);
-                cout << "->";
-                Beep(1000, 50);
-                menu_item++;
+                desplazarAbajo(x, y, menu_item);
                 continue;
             }
             else if (GetAsyncKeyState(VK_DOWN) && y == bottom) {
-                gotoxy(x - 2, y);
-                cout << "  ";
-                y = top;
-                gotoxy(x - 2, y);
-                cout << "->";
-                Beep(1000, 50);
-                menu_item = 0;
+                desplazarTop(x, y, menu_item, top);
                 continue;
             }
 
             if (GetAsyncKeyState(VK_UP) && y != top) {
-                gotoxy(x - 2, y);
-                cout << "  ";
-                y--;
-                gotoxy(x - 2, y);
-                cout << "->";
-                Beep(1000, 50);
-                menu_item--;
+                desplazarArriba(x, y, menu_item);
                 continue;
             }
             else if (GetAsyncKeyState(VK_UP) && y == top) {
-                gotoxy(x - 2, y);
-                cout << "  ";
-                y = bottom;
-                gotoxy(x - 2, y);
-                cout << "->";
-                Beep(1000, 50);
-                menu_item = qItem;
+                desplazarBottom(x, y, menu_item, qItem, bottom);
                 continue;
             }
             if (GetAsyncKeyState(VK_ESCAPE)) return 0;
@@ -94,17 +94,19 @@ int main() {
 
                 case 0: {
                     iniciarJuegoMulti();
+                    musica = false;
                     running = false;
                     break;
                 }
 
                 case 1: {
-                    iniciarJuegoSingle();
+                    mostrarInterfazLeaderboard();
                     running = false;
                     break;
                 }
 
                 case 2: {
+                    resetColor();
                     return 0;
                     break;
                 }
@@ -114,4 +116,34 @@ int main() {
 
         }
     }
+   
+}
+
+
+void color(int color) {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+void desplazarAbajo(int& x, int& y, int& menu_item) {
+    y++;
+    Beep(1000, 50);
+    menu_item++;
+}
+
+void desplazarArriba(int& x, int& y, int& menu_item) {
+    y--;
+    Beep(1000, 50);
+    menu_item--;
+}
+
+void desplazarTop(int& x, int& y, int& menu_item, int top) {
+    y = top;
+    Beep(1000, 50);
+    menu_item = 0;
+}
+
+void desplazarBottom(int& x, int& y, int& menu_item, int qItem, int bottom){
+    y = bottom;
+    Beep(1000, 50);
+    menu_item = qItem;
 }
