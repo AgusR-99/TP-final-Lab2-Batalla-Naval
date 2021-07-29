@@ -14,6 +14,9 @@
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add option="-lwinmm" />
+				</Linker>
 			</Target>
 			<Target title="Release">
 				<Option output="bin/Release/TP-final-Lab2-Batalla-Naval" prefix_auto="1" extension_auto="1" />
@@ -32,12 +35,12 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Clases.h" />
-		<Unit filename="ComportamientoIA.h" />
-		<Unit filename="Funcs.h" />
+		<Unit filename="Gamemode 1v1/Clases.h" />
+		<Unit filename="Gamemode 1v1/ComportamientoIA.h" />
+		<Unit filename="Gamemode 1v1/FuncsMulti.h" />
+		<Unit filename="Gamemode 1v1/UI.h" />
+		<Unit filename="Gamemode 1v1/rlutil.h" />
 		<Unit filename="TP-final-Lab2-Batalla-Naval.cpp" />
-		<Unit filename="rlutil.h" />
-		<Unit filename="utilidades.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
