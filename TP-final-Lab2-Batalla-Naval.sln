@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31205.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TP-final-Lab2-Batalla-Naval", "TP-final-Lab2-Batalla-Naval.vcxproj", "{DC100E38-F91C-409C-A6CB-B532135879E5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TP-final-Lab2-Batalla-Naval", "TP-final-Lab2-Batalla-Naval\TP-final-Lab2-Batalla-Naval.vcxproj", "{DC100E38-F91C-409C-A6CB-B532135879E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +26,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {670B9230-ED46-4A8B-BCD9-51B679DF5D1C}
+		SolutionGuid = {D5206EF6-CF88-44BE-AB58-FC578F0E2CEB}
 	EndGlobalSection
 EndGlobal
