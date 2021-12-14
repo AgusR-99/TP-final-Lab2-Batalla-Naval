@@ -35,12 +35,27 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Clases.h" />
-		<Unit filename="ComportamientoIA.h" />
-		<Unit filename="FuncsMulti.h" />
-		<Unit filename="UI.h" />
-		<Unit filename="rlutil.h" />
-		<Unit filename="TP-final-Lab2-Batalla-Naval.cpp" />
+		<Unit filename="src/ComportamientoIA.cpp" />
+		<Unit filename="src/ComportamientoIA.h" />
+		<Unit filename="src/Constantes.cpp" />
+		<Unit filename="src/Constantes.h" />
+		<Unit filename="src/Elemento.cpp" />
+		<Unit filename="src/Elemento.h" />
+		<Unit filename="src/Enums.h" />
+		<Unit filename="src/FuncsMulti.cpp" />
+		<Unit filename="src/FuncsMulti.h" />
+		<Unit filename="src/Jugador.cpp" />
+		<Unit filename="src/Jugador.h" />
+		<Unit filename="src/Matriz.cpp" />
+		<Unit filename="src/Matriz.h" />
+		<Unit filename="src/Nave.cpp" />
+		<Unit filename="src/Nave.h" />
+		<Unit filename="src/SharedFuncs.cpp" />
+		<Unit filename="src/SharedFuncs.h" />
+		<Unit filename="src/TP-final-Lab2-Batalla-Naval.cpp" />
+		<Unit filename="src/UI.cpp" />
+		<Unit filename="src/UI.h" />
+		<Unit filename="src/rlutil.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

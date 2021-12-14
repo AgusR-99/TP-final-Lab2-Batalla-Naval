@@ -45,6 +45,9 @@
     <ClCompile Include="src\SharedFuncs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Cheat.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ComportamientoIA.h">
@@ -83,9 +86,38 @@
     <ClInclude Include="src\SharedFuncs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Cheat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Consola.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="TP-final-Lab2-Batalla-Naval.cbp" />
     <None Include="Gamemode Singleplayer\juegos.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="music\defeat.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="music\menu.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="music\climax.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="music\battle.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="music\cheater.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="music\placement.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
+    <Media Include="music\victory.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

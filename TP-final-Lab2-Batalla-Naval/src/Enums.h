@@ -35,9 +35,16 @@ enum class EstadoAtaque {
 	OK
 };
 
+enum class TipoCheat {
+	GANAR,
+	PERDER,
+	REVELAR,
+	NONE
+};
+
 enum class Input {
 	NOCMD,
-	DEBUG,
+	CHEAT,
 	QUITAR,
 	COORD,
 	BAD,

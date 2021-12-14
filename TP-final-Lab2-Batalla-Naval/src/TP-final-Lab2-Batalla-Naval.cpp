@@ -1,11 +1,10 @@
 ﻿#include <iostream>
 #include <windows.h>
+#include <time.h>
 #include <cstdio>
-#include <mmsystem.h>
+#include <mmsystem.h>8
 #include <cwchar>
 #include <sstream>
-
-#pragma execution_character_set( "utf-8" )
 
 using namespace std;
 
@@ -20,7 +19,8 @@ void desplazarBottom(int& x, int& y, int& menu_item, int qItem, int bottom);
 void color(int);
 int main() {
     rlutil::setConsoleTitle("Batalla naval");
-    bool musica = false;
+    setearColorDefault();
+    bool sndMenu = true;
     int set[] = { 7,7,7 };
     srand((unsigned)time(0));
     setlocale(LC_ALL, "spanish");
@@ -37,13 +37,15 @@ int main() {
     cfi.FontWeight = FW_NORMAL;
     std::wcscpy(cfi.FaceName, L"Consolas"); // Elegir fuente
     SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+    AjustarVentana(55, 20);
+    PlaySound(TEXT("music/menu.wav"), NULL, SND_ASYNC | SND_LOOP);
+    mostrarSplashScreen(0, 1);
     while (true) {
-        if (musica == false) {
+        if (sndMenu == false) {
             PlaySound(TEXT("music/menu.wav"), NULL, SND_ASYNC | SND_LOOP);
-            musica = true;
+            sndMenu = true;
         }
-        AjustarVentana(40,20);
-        rlutil::resetColor();
+        AjustarVentana(40, 20);
         system("cls");
         bool running = true;
         int menu_item = 0, x = 11, y = 2;
@@ -101,7 +103,7 @@ int main() {
 
                 case 0: {
                     iniciarJuegoMulti();
-                    musica = false;
+                    sndMenu = false;
                     running = false;
                     break;
                 }
@@ -123,7 +125,7 @@ int main() {
 
         }
     }
-   
+
 }
 
 void color(int color) {
