@@ -119,5 +119,8 @@
     <Media Include="music\victory.wav">
       <Filter>Resource Files</Filter>
     </Media>
+    <Media Include="music\transition.wav">
+      <Filter>Resource Files</Filter>
+    </Media>
   </ItemGroup>
 </Project>

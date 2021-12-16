@@ -7,20 +7,27 @@
 #include "rlutil.h"
 #include "SharedFuncs.h"
 
-int setFreq(Frecuencia value);
+int setFreq(FrecuenciaSnd value);
 
-int setDuration(Duracion value);
+int setDuration(DuracionAnim value);
 
 int setMod(Estado value);
 
 bool AjustarVentana(int Ancho, int Alto);
 
+//Muestra el menu de pausa ingame
+OpcionMenuPausa mostrarInterfazPausa(int offsetX, int offsetY, TipoCheat& cmdCheat);
+
+void mostrarConsola(TipoCheat& cmdCheat);
 
 //Muestra la interfaz de ingreso de naves
 void mostrarInterfazIngreso(int i, char r, int offsetX, int offsetY, bool bInstant);
 
 //Muestra mensaje de comienzo rapido
-void mostrarInterfazComienzoRapido(int offsetX, int offsetY);
+OpcionMenuComienzo mostrarInterfazComienzoRapido(int offsetX, int offsetY);
+
+//Muestra una breve historia del juego
+void mostrarLore();
 
 //Muestra los turnos en la interfaz
 void mostrarInterfazTurnos(int, int, int);
@@ -42,7 +49,7 @@ void mostrarInterfazRespuestaInvalida(int offsetX, int offsetY);
 void mostrarInterfazLeaderboard();
 
 //Mediante las fechas direccionales, navegar por el tablero
-bool navegarEnTablero(int x, int y, Matriz tablero);
+OpcionNavegacion navegarEnTablero(int& x, int& y, Matriz tablero, int offsetX, int offsetY);
 
 //Intercambiar elementos de un vector
 void intercambiar(Jugador*, Jugador*);
@@ -53,7 +60,7 @@ void mostrarSplashScreen(int offsetX, int offsetY);
 void validacionesFlags(Error& validacion, bool& flag0, bool& flag1, bool& flag2, Input cmd);
 
 //Muestra el resultado de un ataque
-void mostrarResultadoAccion(Estado estado, Frecuencia freq);
+void mostrarResultadoAccion(Estado estado, FrecuenciaSnd freq);
 //Muestra ambos tableros
 void mostrarTableros(Matriz, Matriz);
 
@@ -61,7 +68,7 @@ void mostrarTableros(Matriz, Matriz);
 void setearColorDefault();
 
 //Muestra coordenadas ingresadas en el turno
-void mostrarCoordenadas(int, int, Frecuencia);
+void mostrarCoordenadas(int, int, FrecuenciaSnd);
 //Muestra una nave con los sprites
 void mostrarNave(int id, int length, Elemento);
 
@@ -73,22 +80,22 @@ char strToRespuesta(std::string input);
 
 void desplazarCursor(int& x, int& y);
 
-Input leerListaDeComandos(std::string input, TipoCheat * cmdCheat);
+Input leerListaDeComandos(std::string input, TipoCheat& cmdCheat);
 
 //Pide coordenadas X e Y, asi como una orientacion
-Input ingresarDatos(int&, int&, char&, int, int, TipoCheat* cmdCheat);
+Input ingresarDatos(int&, int&, char&, int, int, TipoCheat& cmdCheat);
 
 //Pide coordenadas X e Y
-Input ingresarDatos(int&, int&, int, int, TipoCheat* cmdCheat);
+Input ingresarDatos(int&, int&, int, int, TipoCheat& cmdCheat);
 
 //Pide un char
-Input ingresarDatos(char&, int offsetX, int offsetY, TipoCheat* cmdCheat);
+Input ingresarDatos(char&, int offsetX, int offsetY);
 
 // Mostrar texto animado
-void mostrarTextoAnimado(std::string texto, Duracion sleepDuration);
+void mostrarTextoAnimado(std::string texto, DuracionAnim sleepDuration);
 
 //Mostrar texto animado con sonidos
-void mostrarTextoAnimado(std::string texto, Duracion beepDuration, Frecuencia beepFreq);
+void mostrarTextoAnimado(std::string texto, DuracionAnim beepDuration, FrecuenciaSnd beepFreq);
 
 //Muestra el cambio en puntuaje mediante una animacion
 void rollearPuntuaje(int inicio, int objetivo, int offsetX, int offsetY);

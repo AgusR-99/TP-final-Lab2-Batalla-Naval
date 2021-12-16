@@ -7,6 +7,24 @@ enum {
 	DERECHA
 };
 
+enum class OpcionNavegacion {
+	CONTINUAR,
+	MENU
+};
+
+enum class OpcionMenuPausa {
+	VOLVER,
+	CONSOLA,
+	SALIR
+};
+
+enum class OpcionMenuComienzo {
+	NONE,
+	SI,
+	NO,
+	SALIR
+};
+
 enum class Error {
 	ORIENTACION,
 	FUERA,
@@ -42,22 +60,22 @@ enum class TipoCheat {
 	NONE
 };
 
+//Varios de los enums estan deprecados
 enum class Input {
-	NOCMD,
+	NOCMD, 
 	CHEAT,
-	QUITAR,
-	COORD,
 	BAD,
-	OK
+	OK,
+	QUITAR
 };
 
-enum class Frecuencia {
+enum class FrecuenciaSnd {
 	ALTA,
 	MEDIA,
 	BAJA
 };
 
-enum class Duracion {
+enum class DuracionAnim {
 	INSTANTANEO,
 	RAPIDO,
 	NORMAL,

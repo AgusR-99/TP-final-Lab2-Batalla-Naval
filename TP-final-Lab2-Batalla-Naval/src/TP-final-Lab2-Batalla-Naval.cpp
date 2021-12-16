@@ -3,7 +3,7 @@
 #include <time.h>
 #include <cstdio>
 #include <mmsystem.h>8
-#include <cwchar>
+//#include <cwchar>
 #include <sstream>
 
 using namespace std;
@@ -16,19 +16,19 @@ void desplazarAbajo(int& x, int& y, int& menu_item);
 void desplazarArriba(int& x, int& y, int& menu_item);
 void desplazarTop(int& x, int& y, int& menu_item, int qItem);
 void desplazarBottom(int& x, int& y, int& menu_item, int qItem, int bottom);
-void color(int);
 int main() {
     rlutil::setConsoleTitle("Batalla naval");
     setearColorDefault();
     bool sndMenu = true;
-    int set[] = { 7,7,7 };
+    int set[] = { 7,7,7,7 };
     srand((unsigned)time(0));
     setlocale(LC_ALL, "spanish");
     rlutil::setColor(rlutil::WHITE);
     rlutil::setBackgroundColor(rlutil::BLACK);
     rlutil::saveDefaultColor();
     //Esto no andaba en la compu del profe, eliminar?
-    CONSOLE_FONT_INFOEX cfi;
+    //Probar si anda en maquina del profe
+    /*CONSOLE_FONT_INFOEX cfi;
     cfi.cbSize = sizeof(cfi);
     cfi.nFont = 0;
     cfi.dwFontSize.X = 0; // Ancho de cada caracter
@@ -36,7 +36,7 @@ int main() {
     cfi.FontFamily = FF_DONTCARE;
     cfi.FontWeight = FW_NORMAL;
     std::wcscpy(cfi.FaceName, L"Consolas"); // Elegir fuente
-    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+    SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);*/
     AjustarVentana(55, 20);
     PlaySound(TEXT("music/menu.wav"), NULL, SND_ASYNC | SND_LOOP);
     mostrarSplashScreen(0, 1);
@@ -50,26 +50,32 @@ int main() {
         bool running = true;
         int menu_item = 0, x = 11, y = 2;
         int qItem = 2;
-        int bottom = 4;
+        int bottom = 5;
         int top = y;
         rlutil::hidecursor();
         rlutil::locate(9, 3);
-        mostrarTextoAnimado("BIENVENIDO A BORDO CAPITAN", Duracion::LENTO, Frecuencia::BAJA);
+        rlutil::resetColor();
+        mostrarTextoAnimado("BIENVENIDO A BORDO CAPITAN", DuracionAnim::LENTO, FrecuenciaSnd::BAJA);
         while (running == true) {
             set[0] = 15;
             set[1] = 15;
             set[2] = 15;
+            set[3] = 15;
             if (menu_item == 0) set[0] = 12;
             if (menu_item == 1) set[1] = 12;
             if (menu_item == 2) set[2] = 12;
+            if (menu_item == 3) set[3] = 12;
             gotoxy(x + 8, 9);
-            color(set[0]);
+            rlutil::color(set[0]);
             cout << "Jugar";
             gotoxy(x + 5, 10);
-            color(set[1]);
+            rlutil::color(set[1]);
             cout << "Leaderboard";
-            gotoxy(x + 2, 11);
-            color(set[2]);
+            gotoxy(x + 8, 11);
+            rlutil::color(set[2]);
+            cout << "Lore";
+            gotoxy(x + 2, 12);
+            rlutil::color(set[3]);
             cout << "Salir del programa";
 
             rlutil::setColor(rlutil::LIGHTBLUE);
@@ -115,6 +121,12 @@ int main() {
                 }
 
                 case 2: {
+                    mostrarLore();
+                    running = false;
+                    break;
+                }
+
+                case 3: {
                     rlutil::resetColor();
                     return 0;
                     break;
@@ -126,32 +138,4 @@ int main() {
         }
     }
 
-}
-
-void color(int color) {
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
-}
-
-void desplazarAbajo(int& x, int& y, int& menu_item) {
-    y++;
-    Beep(1000, 50);
-    menu_item++;
-}
-
-void desplazarArriba(int& x, int& y, int& menu_item) {
-    y--;
-    Beep(1000, 50);
-    menu_item--;
-}
-
-void desplazarTop(int& x, int& y, int& menu_item, int top) {
-    y = top;
-    Beep(1000, 50);
-    menu_item = 0;
-}
-
-void desplazarBottom(int& x, int& y, int& menu_item, int qItem, int bottom){
-    y = bottom;
-    Beep(1000, 50);
-    menu_item = qItem;
 }

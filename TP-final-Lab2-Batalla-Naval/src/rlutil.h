@@ -451,6 +451,10 @@ RLUTIL_INLINE RLUTIL_STRING_T getANSIBackgroundColor(const int c) {
 	}
 }
 
+RLUTIL_INLINE void color(int color) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
 /// Function: setColor
 /// Change color specified by number (Windows / QBasic colors).
 /// Don't change the background color
@@ -547,6 +551,17 @@ RLUTIL_INLINE void cls(void) {
 	RLUTIL_PRINT(ANSI_CLS);
 	RLUTIL_PRINT(ANSI_CURSOR_HOME);
 #endif
+}
+
+RLUTIL_INLINE void squareBorders(int width, int height, int offsetX, int offsetY, int colorId) {
+	for (int i = height; i > 0; i--) {
+		locate(offsetX, offsetY + i);
+		for (int j = 0; j <= width; j++) {
+			if (i == height or i == 1) color(colorId);
+			std::cout << " ";
+			resetColor();
+		}
+	}
 }
 
 /// Function: locate

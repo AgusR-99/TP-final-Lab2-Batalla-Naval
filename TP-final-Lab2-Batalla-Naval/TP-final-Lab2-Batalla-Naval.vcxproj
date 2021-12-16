@@ -185,6 +185,7 @@
     <Media Include="music\defeat.wav" />
     <Media Include="music\menu.wav" />
     <Media Include="music\placement.wav" />
+    <Media Include="music\transition.wav" />
     <Media Include="music\victory.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -19,14 +19,14 @@ void iniciarJuegoMulti() {
     const int cantidad = 5;
     Nave naveJugador[cantidad];
     Nave naveIA[cantidad];
-    int comienzoRapido = -2;
+    OpcionMenuComienzo comienzoRapido = OpcionMenuComienzo::NONE;
     Estado estadoJugador = Estado::ESPERA;
     Estado estadoIA = Estado::ESPERA;
     int estadoCaza = false;
     int origenX, origenY, lindanteX, lindanteY;
     int direccion = ARRIBA;
     int turno = 0;
-    int x, y, tempXJugador = -1, tempYJugador = -1, tempXIA = -1, tempYIA = -1;
+    int x = 0, y = 0, /*<---Variables deprecadas*/ tempXJugador = 0, tempYJugador = 0, tempXIA = -1, tempYIA = -1;
     bool condicionV = false;
     bool condicionD = false;
     bool bInstant = false;
@@ -35,24 +35,16 @@ void iniciarJuegoMulti() {
     std::string condicion;
     Matriz tableroJugador;
     Matriz tableroIA;
-    Input comando = Input::OK;
+    OpcionMenuPausa comando;
+    Input input; //No deberia usarse. No permite que la UI sea uniforme
     bool toggleDebug = false, tramposo = false;
     bool sndClimax = false, sndTransicion = false;
     bool flagVictoria = false, flagDerrota = false;
     TipoCheat cmdCheat = TipoCheat::NONE;
     for (int i = 0; i < cantidad; i++) {
-        do {
-            ingresarNave(naveJugador, tableroJugador, tableroIA, i, comienzoRapido, bInstant, comando, &cmdCheat);
-            if (comando == Input::CHEAT) {
-                tramposo = true;
-                Beep(1000, 250);
-                Beep(2000, 250);
-                     if (cmdCheat == TipoCheat::GANAR)   condicionV = true;
-                else if (cmdCheat == TipoCheat::PERDER)  condicionD = true;
-                else if (cmdCheat == TipoCheat::REVELAR) tableroIA.RevelarTablero();
-            }
-        } while (comando == Input::CHEAT);
-        if (comando == Input::QUITAR) return;
+        ingresarNave(naveJugador, tableroJugador, tableroIA, i, comienzoRapido, bInstant, input, cmdCheat);
+        if (comienzoRapido == OpcionMenuComienzo::SALIR or
+            input == Input::QUITAR) return;
         colocarNaveIA(tableroIA, i, naveIA);
         if (toggleDebug == false) tableroIA.OcultarTablero();
         else tableroIA.RevelarTablero();
@@ -60,24 +52,13 @@ void iniciarJuegoMulti() {
     rlutil::hidecursor();
     system("cls");
     mostrarTableros(tableroJugador, tableroIA);
-    rlutil::locate(POSICION_MATRIX_X - 8, POSICION_MATRIX_Y + 16);
-    rlutil::resetColor();
-    std::cout << ":q";
-    rlutil::setColor(rlutil::LIGHTBLUE);
-    std::cout << "<Enter>";
-    rlutil::resetColor();
-    std::cout << " para salir - :d";
-    rlutil::setColor(rlutil::LIGHTBLUE);
-    std::cout << "<Enter>";
-    rlutil::resetColor();
-    std::cout << " para togglear debug mode";
     rlutil::locate(POSICION_MATRIX_X + 12, POSICION_MATRIX_Y + 13);
     rlutil::setColor(rlutil::YELLOW);
-    mostrarTextoAnimado("Naves colocadas!", Duracion::NORMAL, Frecuencia::MEDIA);
+    mostrarTextoAnimado("Naves colocadas!", DuracionAnim::NORMAL, FrecuenciaSnd::MEDIA);
     int restantesJugador = navesRestantes(naveJugador, cantidad);
     int restantesIA = navesRestantes(naveIA, cantidad);
     rlutil::locate(POSICION_MATRIX_X - 1, POSICION_MATRIX_Y + 14);
-    mostrarTextoAnimado("Presione cualquier tecla para continuar. . . ", Duracion::NORMAL, Frecuencia::MEDIA);
+    mostrarTextoAnimado("Presione cualquier tecla para continuar. . . ", DuracionAnim::NORMAL, FrecuenciaSnd::MEDIA);
     getch();
     rlutil::resetColor();
     EstadoAtaque validacion;
@@ -86,6 +67,8 @@ void iniciarJuegoMulti() {
     while (condicionV == false and condicionD == false) {
         turno++; //Avanza de turno una vez que ambas partes realicen la accion
         rlutil::showcursor();
+
+        OpcionNavegacion opcion;
         do { //Turno jugador
             if ((restantesIA <= 2 or restantesJugador <= 2) && sndTransicion == false) {
                 PlaySound(TEXT("music/transition.wav"), NULL, SND_ASYNC); //El sonido se reproducira al mismo tiempo que se ejecutan las instrucciones de abajo
@@ -104,24 +87,33 @@ void iniciarJuegoMulti() {
                 }
                 puntuajeOld = puntuaje;
 
-                comando = ingresarDatos(x, y, 17, 11, &cmdCheat);
-                if (comando == Input::CHEAT) {
+                //Setear coordenadas en la ultima posicion
+                x = tempXJugador, y = tempYJugador;
+
+                //Navegacion en tablero
+                //Se muestra el menu de pausa al presionar ESC
+                opcion = navegarEnTablero(x, y, tableroIA, POSICION_MATRIX_X + 24, POSICION_MATRIX_Y + 2);
+
+                //Actualizar variables temporales
+                tempXJugador = x;
+                tempYJugador = y;
+                if (opcion == OpcionNavegacion::MENU) {
+                    comando = mostrarInterfazPausa(POSICION_MATRIX_X + 10, POSICION_MATRIX_Y + 7, cmdCheat);
+                    if (comando == OpcionMenuPausa::SALIR) return;
+                }
+                //Detecta si el usuario hizo trampa
+                if (cmdCheat != TipoCheat::NONE) {
                     tramposo = true;
-                    Beep(1000, 250);
-                    Beep(2000, 250);
-                         if (cmdCheat == TipoCheat::GANAR)   condicionV = true;
+                    if (cmdCheat == TipoCheat::GANAR)   condicionV = true;
                     else if (cmdCheat == TipoCheat::PERDER)  condicionD = true;
                     else if (cmdCheat == TipoCheat::REVELAR) tableroIA.RevelarTablero();
                 }
-            } while (comando == Input::CHEAT);
-            if (comando == Input::QUITAR) return;
-            if (comando == Input::BAD) estadoJugador = Estado::INVALIDO;
-            else {
-                validacion = tableroIA.ValidarAtaque(x, y);
-                if (validacion == EstadoAtaque::FUERA) estadoJugador = Estado::FUERA;
-                else if (validacion == EstadoAtaque::REPETIDO) estadoJugador = Estado::REPETIDO;
-                else estadoJugador = atacarPosicion(tableroIA, restantesIA, x, y, naveIA, cantidad);
-            }
+              //Sigue loopeando mientras no se confirmen coordenadas
+            } while (opcion == OpcionNavegacion::MENU);
+            validacion = tableroIA.ValidarAtaque(x, y);
+            if (validacion == EstadoAtaque::FUERA) estadoJugador = Estado::FUERA;
+            else if (validacion == EstadoAtaque::REPETIDO) estadoJugador = Estado::REPETIDO;
+            else estadoJugador = atacarPosicion(tableroIA, restantesIA, x, y, naveIA, cantidad);
             //Movimiento invalido
             if (estadoJugador == Estado::REPETIDO or estadoJugador == Estado::FUERA or estadoJugador == Estado::INVALIDO) {
                 estadoIA = Estado::ESPERA;
@@ -129,7 +121,7 @@ void iniciarJuegoMulti() {
             }
 
             //Mientras se intente hacer un movimiento invalido, no pasara de turno
-        } while (estadoJugador == Estado::REPETIDO or estadoJugador == Estado::FUERA or comando == Input::BAD);
+        } while (estadoJugador == Estado::REPETIDO or estadoJugador == Estado::FUERA);
         rlutil::hidecursor();
         if (estadoJugador == Estado::FALLO) { //FALLO
             //Multiplicador se revierte
@@ -225,8 +217,10 @@ void iniciarJuegoMulti() {
     mostrarInterfazPuntuaje(puntuaje, resultado, 0, 0);
 }
 
-void ingresarNave(Nave naveJugador[], Matriz tableroJugador, Matriz tableroIA, int id,
-    int& comienzoRapido, bool& bInstant, Input& comando, TipoCheat* cmdCheat) {
+void ingresarNave(Nave naveJugador[],
+ Matriz tableroJugador, Matriz tableroIA,int id, OpcionMenuComienzo& comienzoRapido,
+ bool& bInstant, Input& comando, TipoCheat& cmdCheat) {
+
     int x, y;
     char r = 'v';
     Error validacion = Error::FUERA;
@@ -234,23 +228,16 @@ void ingresarNave(Nave naveJugador[], Matriz tableroJugador, Matriz tableroIA, i
     bool flag1 = false;
     bool flag2 = false;
     naveJugador[id].CrearNave(id);
+    system("cls");
+    mostrarTableros(tableroJugador, tableroIA);
+    if (comienzoRapido == OpcionMenuComienzo::NONE)
+        comienzoRapido = mostrarInterfazComienzoRapido(23, 13);
+    if (comienzoRapido == OpcionMenuComienzo::SALIR) return;
     while (validacion == Error::ORIENTACION or
         validacion == Error::FUERA or
         validacion == Error::COLISION) {
-        while (comienzoRapido == -2 or comando == Input::BAD) {
-            //Dependiendo lo que se haya validado, se mostrara o no un mensaje de error
-            system("cls");
-            mostrarTableros(tableroJugador, tableroIA);
-            mostrarInterfazComienzoRapido(1, 13);
-            if (comienzoRapido == -1 or comando == Input::BAD) mostrarInterfazRespuestaInvalida(8, 15);
-            rlutil::showcursor();
-            comando = ingresarDatos(r, 40, 13, cmdCheat);
-            rlutil::hidecursor;
-            if (comando == Input::QUITAR) return;
-            if (comando == Input::CHEAT) return;
-            comienzoRapido = validarRespuesta(r);
-        }
-        if (comienzoRapido == 0) {
+        rlutil::hidecursor;
+        if (comienzoRapido == OpcionMenuComienzo::NO) {
             do {
                 rlutil::hidecursor();
                 system("cls");
@@ -357,19 +344,6 @@ bool condicionDerrota(int navesJugador, TipoCheat* cmdCheat) {
     return false;
 }
 
-int strToCoord(std::string c, Input& input) {
-    const int length = 10;
-    std::string valor[length]{ "0","1","2" ,"3" ,"4" ,"5" ,"6" ,"7" ,"8" ,"9" };
-    for (int i = 0; i < length; i++) {
-        if (c == valor[i]) {
-            input = Input::COORD;
-            return i;
-        }
-    }
-    input = Input::BAD;
-    return -1;
-}
-
 char strToOrientacion(std::string c) {
     const int length = 10;
     if (c == "v" or c == "V") return 'v';
@@ -386,14 +360,14 @@ char strToRespuesta(std::string c) {
 
 #include "Cheat.h"
 
-Input leerListaDeComandos(std::string c, TipoCheat * cmdCheat) {
+Input leerListaDeComandos(std::string c, TipoCheat& cmdCheat) {
     for (int i = 0; i < listaCheats_size; i++) {
         if (c == listaCheats[i].getNombre()) {
-            *cmdCheat = listaCheats[i].getTipo(); return Input::CHEAT;
+            cmdCheat = listaCheats[i].getTipo(); return Input::CHEAT;
         }
     }
     if (c == ":q") return Input::QUITAR;
-    return Input::NOCMD;
+    return Input::BAD;
 }
 
 //Obtener cosas

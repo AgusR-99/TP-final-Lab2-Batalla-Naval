@@ -35,8 +35,11 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="src/Cheat.cpp" />
+		<Unit filename="src/Cheat.h" />
 		<Unit filename="src/ComportamientoIA.cpp" />
 		<Unit filename="src/ComportamientoIA.h" />
+		<Unit filename="src/Consola.h" />
 		<Unit filename="src/Constantes.cpp" />
 		<Unit filename="src/Constantes.h" />
 		<Unit filename="src/Elemento.cpp" />

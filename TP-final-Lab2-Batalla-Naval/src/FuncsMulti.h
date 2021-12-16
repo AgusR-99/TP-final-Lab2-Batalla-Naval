@@ -2,7 +2,7 @@
 //Funcion principal. Contiene a las demas funciones
 void iniciarJuegoMulti();
 //Inicializa una nave
-void ingresarNave(Nave naveJugador[], Matriz tableroJugador, Matriz tableroIA, int id, int& comienzoRapido, bool& bInstant, Input&, TipoCheat* cmdCheat);
+void ingresarNave(Nave naveJugador[], Matriz tableroJugador, Matriz tableroIA, int id, OpcionMenuComienzo& comienzoRapido, bool& bInstant, Input& comando, TipoCheat& cmdCheat);
 //Desarrollo intermedio del juego
 Estado atacarPosicion(Matriz tablero, int& res, int, int, Nave[], int cantidad);
 //Devuelve las naves restantes (Mas adelante debera tomar como parametro una lista de naves)
