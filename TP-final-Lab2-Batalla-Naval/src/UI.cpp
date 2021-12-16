@@ -6,19 +6,19 @@
 #include <Windows.h>
 std::stringstream buffer;
 #include "UI.h"
-int setFreq(Frecuencia value) {
+int setFreq(FrecuenciaSnd value) {
     switch (value) {
-    case Frecuencia::ALTA: return 2000;
-    case Frecuencia::MEDIA: return 750;
-    case Frecuencia::BAJA: return 500;
+    case FrecuenciaSnd::ALTA: return 2000;
+    case FrecuenciaSnd::MEDIA: return 750;
+    case FrecuenciaSnd::BAJA: return 500;
     }
 }
-int setDuration(Duracion value) {
+int setDuration(DuracionAnim value) {
     switch (value) {
-    case Duracion::INSTANTANEO: return 0;
-    case Duracion::RAPIDO: return 5;
-    case Duracion::NORMAL: return 15;
-    case Duracion::LENTO: return 30;
+    case DuracionAnim::INSTANTANEO: return 0;
+    case DuracionAnim::RAPIDO: return 5;
+    case DuracionAnim::NORMAL: return 15;
+    case DuracionAnim::LENTO: return 30;
     }
 }
 int setMod(Estado estado) {
@@ -50,27 +50,146 @@ bool AjustarVentana(int Ancho, int Alto) {
     return TRUE;
 }
 
-void mostrarInterfazIngreso(int id, char r, int offsetX, int offsetY, bool bInstant) {
-    Nave nave;
-    Elemento elemento;
-    Duracion fastD = Duracion::RAPIDO;
-    Duracion normalD = Duracion::NORMAL;
-    Duracion slowD = Duracion::LENTO;
-    if (bInstant == true) {
-        fastD = Duracion::INSTANTANEO;
-        normalD = Duracion::INSTANTANEO;
-        slowD = Duracion::INSTANTANEO;
+OpcionMenuPausa mostrarInterfazPausa(int offsetX, int offsetY, TipoCheat& cmdCheat) {
+    int set[] = { 7,7,7 };
+    int menu_item = 0, x = 11, y = 2;
+    int qItem = 2;
+    int bottom = 4;
+    int top = y;
+
+    //Crear background del menu
+    gotoxy(offsetX, offsetY);
+    rlutil::squareBorders(19, 7, offsetX, offsetY, 240);
+
+    rlutil::hidecursor();
+    gotoxy(offsetX + 7, offsetY + 1);
+    rlutil::color(240);
+    std::cout << "PAUSA";
+    while (true) {
+        set[0] = 15;
+        set[1] = 15;
+        set[2] = 15;
+        if (menu_item == 0) set[0] = 12;
+        if (menu_item == 1) set[1] = 12;
+        if (menu_item == 2) set[2] = 12;
+        gotoxy(offsetX + 2, offsetY + 3);
+        rlutil::color(set[0]);
+        std::cout << "Reanudar batalla";
+        gotoxy(offsetX + 4, offsetY + 4);
+        rlutil::color(set[1]);
+        std::cout << "Abrir consola";
+        gotoxy(offsetX + 6, offsetY + 5);
+        rlutil::color(set[2]);
+        std::cout << "Rendirse";
+
+        system("pause>nul");
+        if (GetAsyncKeyState(VK_DOWN) && y != bottom) {
+            desplazarAbajo(x, y, menu_item);
+            continue;
+        }
+        else if (GetAsyncKeyState(VK_DOWN) && y == bottom) {
+            desplazarTop(x, y, menu_item, top);
+            continue;
+        }
+
+        if (GetAsyncKeyState(VK_UP) && y != top) {
+            desplazarArriba(x, y, menu_item);
+            continue;
+        }
+        else if (GetAsyncKeyState(VK_UP) && y == top) {
+            desplazarBottom(x, y, menu_item, qItem, bottom);
+            continue;
+        }
+        if (GetAsyncKeyState(VK_ESCAPE)) return OpcionMenuPausa::VOLVER;
+        if (GetAsyncKeyState(VK_RETURN)) {
+            Beep(2000, 50);
+            switch (menu_item) {
+
+            case 0: {
+                return OpcionMenuPausa::VOLVER;
+                break;
+            }
+
+            case 1: {
+                mostrarConsola(cmdCheat);
+                return OpcionMenuPausa::CONSOLA;
+                break;
+            }
+
+            case 2: {
+                return OpcionMenuPausa::SALIR;
+                break;
+            }
+
+            }
+        }
+
     }
-    rlutil::locate(POSICION_MATRIX_X + offsetX - 15, POSICION_MATRIX_Y + 7 + offsetY);
+}
+
+#include "Consola.h"
+
+void mostrarConsola(TipoCheat& cmdCheat) {
+    //Background de consola
+    Input input = Input::NOCMD;
+    std::string str;
+    rlutil::locate(1, 23);
     std::cout << ":q";
     rlutil::setColor(rlutil::LIGHTBLUE);
     std::cout << "<Enter>";
     rlutil::resetColor();
-    std::cout << " para salir - :d";
+    std::cout << " para salir";
+    while(true) {
+        if (input == Input::BAD) {
+        Beep(250, 200);
+        rlutil::locate(1, 25);
+        rlutil::color(79);
+        printf("\33[2K\r");
+        std::cout << "'" << str << "' no es reconocido como un comando valido";
+        rlutil::resetColor();
+        }
+        else if(input == Input::CHEAT) {
+            Beep(1000, 200);
+            rlutil::locate(1, 25);
+            rlutil::color(47);
+            printf("\33[2K\r");
+            std::cout << "TRUCO ACTIVADO";
+            rlutil::resetColor();
+        }
+        rlutil::locate(1, 24);
+        rlutil::color(31);
+        for (size_t i = 0; i < 80; i++) {
+            std::cout << " ";
+        }
+        
+        input = consola::manejarConsola(cmdCheat, str);
+        rlutil::resetColor();
+        if (input == Input::QUITAR) return;
+    }
+}
+
+void setearColorDefault(){
+    rlutil::setColor(rlutil::WHITE);
+    rlutil::saveDefaultColor();
+}
+
+void mostrarInterfazIngreso(int id, char r, int offsetX, int offsetY, bool bInstant) {
+    Nave nave;
+    Elemento elemento;
+    DuracionAnim fastD = DuracionAnim::RAPIDO;
+    DuracionAnim normalD = DuracionAnim::NORMAL;
+    DuracionAnim slowD = DuracionAnim::LENTO;
+    if (bInstant == true) {
+        fastD = DuracionAnim::INSTANTANEO;
+        normalD = DuracionAnim::INSTANTANEO;
+        slowD = DuracionAnim::INSTANTANEO;
+    }
+    rlutil::locate(POSICION_MATRIX_X + offsetX + 5, POSICION_MATRIX_Y + 7 + offsetY);
+    std::cout << ":q";
     rlutil::setColor(rlutil::LIGHTBLUE);
     std::cout << "<Enter>";
     rlutil::resetColor();
-    std::cout << " para togglear debug mode";
+    std::cout << " para salir";
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + offsetY);
     mostrarTextoAnimado("EMBARCACION", normalD);
     rlutil::locate(POSICION_MATRIX_X + 16 + offsetX, POSICION_MATRIX_Y + offsetY);
@@ -115,59 +234,150 @@ void mostrarInterfazIngreso(int id, char r, int offsetX, int offsetY, bool bInst
     rlutil::locate(POSICION_MATRIX_X + offsetX + 16, POSICION_MATRIX_Y + 5 + offsetY);
     mostrarTextoAnimado("v/h", normalD);
 }
-void mostrarInterfazComienzoRapido(int offsetX, int offsetY) {
-    rlutil::resetColor();
-    rlutil::locate(POSICION_MATRIX_X + offsetX - 10, POSICION_MATRIX_Y + 7 + offsetY);
-    std::cout << ":q";
-    rlutil::setColor(rlutil::LIGHTBLUE);
-    std::cout << "<Enter>";
-    rlutil::resetColor();
-    std::cout << " para salir - :d";
-    rlutil::setColor(rlutil::LIGHTBLUE);
-    std::cout << "<Enter>";
-    rlutil::resetColor();
-    std::cout << " para togglear debug mode";
-    rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + offsetY);
-    rlutil::setColor(rlutil::YELLOW);
-    mostrarTextoAnimado("¿Colocar naves aletoriamente (Y/N)? >>", Duracion::NORMAL, Frecuencia::MEDIA);
+OpcionMenuComienzo mostrarInterfazComienzoRapido(int offsetX, int offsetY) {
+    int set[] = { 7,7,7 };
+    int menu_item = 0, x = 11, y = 2;
+    int qItem = 2;
+    int bottom = 4;
+    int top = y;
+    gotoxy(offsetX + 2, offsetY);
+    mostrarTextoAnimado("¿Colocar naves aleatoriamente?", DuracionAnim::NORMAL, FrecuenciaSnd::MEDIA);
+    //Crear background del menu
+    rlutil::squareBorders(27, 7, offsetX + 3, offsetY, 240);
+
+    rlutil::hidecursor();
+    gotoxy(offsetX + 9, offsetY + 1);
+    rlutil::color(240);
+    std::cout << "ELIJA UNA OPCION";
+    while (true) {
+        set[0] = 15;
+        set[1] = 15;
+        set[2] = 15;
+        if (menu_item == 0) set[0] = 12;
+        if (menu_item == 1) set[1] = 12;
+        if (menu_item == 2) set[2] = 12;
+        gotoxy(offsetX + 14, offsetY + 3);
+        rlutil::color(set[0]);
+        std::cout << "Si";
+        gotoxy(offsetX + 14, offsetY + 4);
+        rlutil::color(set[1]);
+        std::cout << "No";
+        gotoxy(offsetX + 4,  offsetY + 5);
+        rlutil::color(set[2]);
+        std::cout << "Volver al menu principal";
+
+        system("pause>nul");
+        if (GetAsyncKeyState(VK_DOWN) && y != bottom) {
+            desplazarAbajo(x, y, menu_item);
+            continue;
+        }
+        else if (GetAsyncKeyState(VK_DOWN) && y == bottom) {
+            desplazarTop(x, y, menu_item, top);
+            continue;
+        }
+
+        if (GetAsyncKeyState(VK_UP) && y != top) {
+            desplazarArriba(x, y, menu_item);
+            continue;
+        }
+        else if (GetAsyncKeyState(VK_UP) && y == top) {
+            desplazarBottom(x, y, menu_item, qItem, bottom);
+            continue;
+        }
+        if (GetAsyncKeyState(VK_ESCAPE)) return OpcionMenuComienzo::SALIR;
+        if (GetAsyncKeyState(VK_RETURN)) {
+            Beep(2000, 50);
+            switch (menu_item) {
+
+            case 0: {
+                return OpcionMenuComienzo::SI;
+                break;
+            }
+
+            case 1: {
+                return OpcionMenuComienzo::NO;
+                break;
+            }
+
+            case 2: {
+                return OpcionMenuComienzo::SALIR;
+                break;
+            }
+
+            }
+        }
+
+    }
+}
+void mostrarLore() {
+    system("cls");
+    mostrarTextoAnimado(
+        "El 18 de noviembre de 1944, después\n"
+        "de una preparación artillera que\n"
+        "había durado horas, los soviéticos\n"
+        "se lanzaron al asalto de la península\n"
+        "de Sworbe, que avanzaba en el mar en la\n"
+        "extremidad meridional de Oesel. Las\n"
+        "tropas alemanas estaban cercadas y era\n"
+        "imposible enviar refuerzos. La\n"
+        "península estaba condenada, pero era\n"
+        "deseable, por lo menos, sacar de allí\n"
+        "las tropas y su material más valioso.\n"
+        "Para ello era preciso contener el\n"
+        "asalto soviético\n"
+        "Tras la llegada, su artillería actuó\n"
+        "con precisión. Los buques agotaron las\n"
+        "municiones luego de 36 h. Ante la\n"
+        "cuantía de los daños, los soviéticos\n"
+        "deciden destruir los buques alemanes.\n", DuracionAnim::RAPIDO);
+    rlutil::showcursor();
+    system("pause>nul");
 }
 void mostrarInterfazTurnos(int turno, int offsetX, int offsetY) {
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + offsetY);
     std::cout << "~~~~~~~~~~~~~~~~~TURNO " << turno << "~~~~~~~~~~~~~~~~~";
 }
-void mostrarInterfazAcciones(Estado estadoJugador, Estado estadoIA, int restantesJugador, int restantesIA, int turno, int offsetX, int offsetY, int xJugador, int yJugador, int xIA, int yIA, int puntuaje, int puntuajeOld, float mult) {
-    rlutil::locate(POSICION_MATRIX_X + offsetX - 5, POSICION_MATRIX_Y + 8 + offsetY);
-    std::cout << ":q";
+void mostrarInterfazAcciones(Estado estadoJugador, Estado estadoIA, int restantesJugador, int restantesIA, int turno, int offsetX, int offsetY, int xJugador, int yJugador, int xIA, int yIA, int puntuaje, int puntuajeOld, float mult, bool* flagVictoria, bool* flagDerrota) {
+    rlutil::locate(POSICION_MATRIX_X + offsetX + 13, POSICION_MATRIX_Y + 8 + offsetY);
     rlutil::setColor(rlutil::LIGHTBLUE);
-    std::cout << "<Enter>";
+    std::cout << "<ESC>";
     rlutil::resetColor();
-    std::cout << " para salir - :d";
-    rlutil::setColor(rlutil::LIGHTBLUE);
-    std::cout << "<Enter>";
-    rlutil::resetColor();
-    std::cout << " para togglear debug mode";
+    std::cout << " para pausar";
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + offsetY);
     mostrarInterfazNavesRestantes(restantesJugador, restantesIA, offsetX, offsetY);
     mostrarInterfazTurnos(turno, offsetX, offsetY + 1);
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 2 + offsetY);
     rlutil::setColor(rlutil::LIGHTCYAN);
-    mostrarTextoAnimado("Jugador: ", Duracion::NORMAL, Frecuencia::ALTA);
+    mostrarTextoAnimado("Jugador: ", DuracionAnim::NORMAL, FrecuenciaSnd::ALTA);
     rlutil::resetColor();
-    mostrarCoordenadas(xJugador, yJugador, Frecuencia::ALTA);
-    mostrarResultadoAccion(estadoJugador, Frecuencia::ALTA);
+    rlutil::locate(POSICION_MATRIX_X + 9 + offsetX, POSICION_MATRIX_Y + 2 + offsetY);
+    mostrarCoordenadas(xJugador, yJugador, FrecuenciaSnd::ALTA);
+    mostrarResultadoAccion(estadoJugador, FrecuenciaSnd::ALTA);
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 3 + offsetY);
     rlutil::setColor(rlutil::LIGHTRED);
     Sleep(500);
-    mostrarTextoAnimado("IA: ", Duracion::NORMAL, Frecuencia::BAJA);
+    mostrarTextoAnimado("IA: ", DuracionAnim::NORMAL, FrecuenciaSnd::BAJA);
     rlutil::resetColor();
-    mostrarCoordenadas(xIA, yIA, Frecuencia::BAJA);
-    mostrarResultadoAccion(estadoIA, Frecuencia::BAJA);
+    mostrarCoordenadas(xIA, yIA, FrecuenciaSnd::BAJA);
+    mostrarResultadoAccion(estadoIA, FrecuenciaSnd::BAJA);
     Sleep(500);
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 4 + offsetY);
     std::cout << "ATAQUE\n";
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 5 + offsetY);
     std::cout << "Coordenadas (X Y) >> ";
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 6 + offsetY);
+    if (restantesIA == 2 and *flagVictoria == false) { 
+        *flagVictoria = true;
+        rlutil::setColor(rlutil::LIGHTCYAN);
+        mostrarTextoAnimado("Victoria inminente!", DuracionAnim::RAPIDO);
+        rlutil::resetColor();
+    }
+    else if (restantesJugador == 2 and *flagDerrota == false) { 
+        *flagDerrota = true;
+        rlutil::setColor(rlutil::LIGHTRED);
+        mostrarTextoAnimado("Derrota inminente!", DuracionAnim::RAPIDO);
+        rlutil::resetColor();
+    }
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + 7 + offsetY);
     std::cout << "Score:";
     rlutil::locate(POSICION_MATRIX_X + offsetX + 12, POSICION_MATRIX_Y + 7 + offsetY);
@@ -201,6 +411,7 @@ void mostrarInterfazPuntuaje(int puntuaje, char* resultado, int offsetX, int off
     system("cls");
     int max = 15;
     char nombre[15];
+    std::string str;
     rlutil::locate(POSICION_MATRIX_X + offsetX + 13, POSICION_MATRIX_Y + offsetY);
     rlutil::setColor(rlutil::LIGHTCYAN);
     std::cout << "Su puntuaje: " << std::setw(4) << std::setfill('0') << puntuaje;
@@ -209,8 +420,8 @@ void mostrarInterfazPuntuaje(int puntuaje, char* resultado, int offsetX, int off
     std::cout << "Ingrese su nombre ";
     std::cout << "[MAX " << max << " caracteres]";
     rlutil::locate(POSICION_MATRIX_X + offsetX + 14, POSICION_MATRIX_Y + 4 + offsetY);
-    std::cin >> nombre;
-    size_t Size = strlen(nombre);
+    std::cin >> str;
+    size_t Size = str.size();
     while (Size > max) {
         rlutil::showcursor();
         rlutil::locate(POSICION_MATRIX_X + offsetX + 3, POSICION_MATRIX_Y + 2 + offsetY);
@@ -221,8 +432,10 @@ void mostrarInterfazPuntuaje(int puntuaje, char* resultado, int offsetX, int off
         rlutil::locate(POSICION_MATRIX_X + offsetX + 14, POSICION_MATRIX_Y + 4 + offsetY);
         //Limpiar campo
         printf("%c[2K", 27);
-        std::cin >> nombre;
+        std::cin >> str;
+        Size = str.size();
     }
+    strcpy(nombre, str.c_str());
     rlutil::hidecursor();
     Jugador jugador;
     jugador.setNombre(nombre);
@@ -273,7 +486,7 @@ void mostrarInterfazLeaderboard() {
         rlutil::resetColor();
         std::cout << " - Borrar Leaderboard";
         rlutil::locate(POSICION_MATRIX_X - 15, POSICION_MATRIX_Y + 3);
-        std::cout << "Jugador";
+        std::cout << "Capitan";
         rlutil::locate(POSICION_MATRIX_X + 1, POSICION_MATRIX_Y + 3);
         std::cout << "Puntuaje";
         rlutil::locate(POSICION_MATRIX_X + 10, POSICION_MATRIX_Y + 3);
@@ -336,13 +549,74 @@ void mostrarInterfazLeaderboard() {
                 reg.VaciarArchivo();
                 rlutil::locate(15, 9);
                 rlutil::setColor(rlutil::LIGHTRED);
-                mostrarTextoAnimado("Datos borrados", Duracion::NORMAL, Frecuencia::MEDIA);
+                mostrarTextoAnimado("Datos borrados", DuracionAnim::NORMAL, FrecuenciaSnd::MEDIA);
                 rlutil::resetColor();
                 rlutil::locate(1, 13);
-                mostrarTextoAnimado("Presione cualquier tecla para continuar", Duracion::NORMAL, Frecuencia::MEDIA);
+                mostrarTextoAnimado("Presione cualquier tecla para continuar", DuracionAnim::NORMAL, FrecuenciaSnd::MEDIA);
                 system("pause>nul");
             }
             return;
+        }
+    }
+}
+
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
+#define KEY_ESC 27
+#define KEY_ENTER 13
+
+OpcionNavegacion navegarEnTablero(int& x, int& y, Matriz tablero, int offsetX, int offsetY){
+    int c;
+    Elemento** elemento = tablero.getElemento();
+    while (true) {
+        //Mostrar coordenadas actuales
+        rlutil::resetColor();
+        gotoxy(29, 15);
+        std::cout << x << "-" << y;
+
+        //Colocar cursor sobre el elemento actual
+        gotoxy(x * 2 + offsetX, y + offsetY);
+        rlutil::setColor(rlutil::YELLOW);
+        std::cout << elemento[y][x].getSprite();
+        //Reposicionar cursor
+        gotoxy(x * 2 + offsetX, y + offsetY);
+        //Presionar alguna flecha
+        c = _getch();
+
+        //Si se presiona la tecla ESC, se devuelve valor para ir a menu de pausa
+        if (c == KEY_ESC) return OpcionNavegacion::MENU;
+        //Si se presiona la tecla ENTER, se devuelve valor que confirma las coordenadas
+        else if (c == KEY_ENTER) return OpcionNavegacion::CONTINUAR;
+
+        //Si se presionan las flechas y no hay overflow, se acciona sobre coords
+        if ((c == KEY_UP or c == KEY_DOWN or c == KEY_LEFT or c == KEY_RIGHT)
+            and (x < 10 and x >= 0) and (y < 10 and y >= 0)) {
+
+            //Desmarcar elemento actual
+            rlutil::setColor(rlutil::LIGHTRED);
+            std::cout << elemento[y][x].getSprite();
+            //Cambio de coordenadas
+            switch (c) {
+            case KEY_UP:
+                y--;
+                break;
+            case KEY_DOWN:
+                y++;
+                break;
+            case KEY_LEFT:
+                x--;
+                break;
+            case KEY_RIGHT:
+                x++;
+                break;
+            }
+            //Evitar overflow
+            if (x > 9) x = 0;
+            else if (x < 0) x = 9;
+            if (y > 9) y = 0;
+            else if (y < 0)y = 9;
         }
     }
 }
@@ -394,7 +668,7 @@ void mostrarTableros(Matriz tableroJugador, Matriz tableroIA) {
     rlutil::locate(POSICION_MATRIX_X + 1, POSICION_MATRIX_Y + 14);
     rlutil::resetColor();
 }
-void mostrarResultadoAccion(Estado estado, Frecuencia freq) {
+void mostrarResultadoAccion(Estado estado, FrecuenciaSnd freq) {
     int color = rlutil::WHITE;
     switch (estado) {
     case Estado::ESPERA:
@@ -441,22 +715,22 @@ void mostrarResultadoAccion(Estado estado, Frecuencia freq) {
     }
 
     rlutil::setColor(color);
-    mostrarTextoAnimado(buffer.str(), Duracion::NORMAL, freq);
+    mostrarTextoAnimado(buffer.str(), DuracionAnim::NORMAL, freq);
     rlutil::resetColor();
     //Limpieza de buffer
     buffer.str("");
 }
 
-void mostrarCoordenadas(int x, int y, Frecuencia frequency) {
+void mostrarCoordenadas(int x, int y, FrecuenciaSnd frequency) {
     if (x != -1 && y != -1) buffer << x << "-" << y << " -> ";
-    mostrarTextoAnimado(buffer.str(), Duracion::NORMAL, frequency);
+    mostrarTextoAnimado(buffer.str(), DuracionAnim::NORMAL, frequency);
     buffer.str("");
 }
 void mostrarNave(int id, int length, Elemento elemento) {
     for (size_t i = 0; i < length; i++) {
         buffer << elemento.getSprite();
     }
-    mostrarTextoAnimado(buffer.str(), Duracion::NORMAL);
+    mostrarTextoAnimado(buffer.str(), DuracionAnim::NORMAL);
 }
 
 void rollearPuntuaje(int inicio, int objetivo, int x, int y) {
@@ -484,7 +758,7 @@ void rollearPuntuaje(int inicio, int objetivo, int x, int y) {
     std::cout << std::setw(4) << std::setfill('0') << objetivo;
     rlutil::showcursor();
 }
-void mostrarTextoAnimado(std::string texto, Duracion sleepDuration) {
+void mostrarTextoAnimado(std::string texto, DuracionAnim sleepDuration) {
     int x = 0;
     while (texto[x] != '\0') {
         std::cout << texto[x];
@@ -492,7 +766,7 @@ void mostrarTextoAnimado(std::string texto, Duracion sleepDuration) {
         x++;
     };
 }
-void mostrarTextoAnimado(std::string texto, Duracion beepDuration, Frecuencia beepFreq) {
+void mostrarTextoAnimado(std::string texto, DuracionAnim beepDuration, FrecuenciaSnd beepFreq) {
     int x = 0;
     while (texto[x] != '\0') {
         std::cout << texto[x];
@@ -505,68 +779,69 @@ bool esDigitos(const std::string& str) {
     return str.find_first_not_of("0123456789") == std::string::npos;
 }
 
+void desplazarCursor(int& x, int& y) {
 
-Input ingresarDatos(int& x, int& y, char& r, int offsetX, int offsetY) {
+}
+
+Input ingresarDatos(int& x, int& y, char& r, int offsetX, int offsetY, TipoCheat& cmdCheat) {
     std::string input;
     Input inputTipo;
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + offsetY);
     std::cin >> input;
-    inputTipo = leerListaDeComandos(input);
+    inputTipo = leerListaDeComandos(input, cmdCheat);
     if (inputTipo == Input::QUITAR) return Input::QUITAR;
-    if (inputTipo == Input::DEBUG) return Input::DEBUG;
+    if (inputTipo == Input::CHEAT) return Input::CHEAT;
     if (esDigitos(input) == true) {
         x = stoi(input);
     }
     else return Input::BAD;
     rlutil::locate(POSICION_MATRIX_X + 2 + offsetX, POSICION_MATRIX_Y + offsetY);
     std::cin >> input;
-    inputTipo = leerListaDeComandos(input);
+    inputTipo = leerListaDeComandos(input, cmdCheat);
     if (inputTipo == Input::QUITAR) return Input::QUITAR;
-    if (inputTipo == Input::DEBUG) return Input::DEBUG;
+    if (inputTipo == Input::CHEAT) return Input::CHEAT;
     if (esDigitos(input) == true) {
         y = stoi(input);
     }
     else return Input::BAD;
     rlutil::locate(POSICION_MATRIX_X + 8 + offsetX, POSICION_MATRIX_Y + offsetY);
     std::cin >> input;
-    inputTipo = leerListaDeComandos(input);
+    inputTipo = leerListaDeComandos(input, cmdCheat);
     if (inputTipo == Input::QUITAR) return Input::QUITAR;
-    if (inputTipo == Input::DEBUG) return Input::DEBUG;
+    if (inputTipo == Input::CHEAT) return Input::CHEAT;
     r = strToOrientacion(input);
     if (r == '0') return Input::BAD;
     return Input::OK;
 }
-Input ingresarDatos(int& x, int& y, int offsetX, int offsetY) {
+Input ingresarDatos(int& x, int& y, int offsetX, int offsetY, TipoCheat& cmdCheat) {
     std::string input;
     Input inputTipo;
     rlutil::locate(POSICION_MATRIX_X + 4 + offsetX, POSICION_MATRIX_Y + 6 + offsetY);
     std::cin >> input;
-    inputTipo = leerListaDeComandos(input);
+    inputTipo = leerListaDeComandos(input, cmdCheat);
     if (inputTipo == Input::QUITAR) return Input::QUITAR;
-    if (inputTipo == Input::DEBUG) return Input::DEBUG;
+    if (inputTipo == Input::CHEAT) return Input::CHEAT;
     if (esDigitos(input) == true) {
         x = stoi(input);
     }
     else return Input::BAD;
     rlutil::locate(POSICION_MATRIX_X + 4 + 2 + offsetX, POSICION_MATRIX_Y + 6 + offsetY);
     std::cin >> input;
-    inputTipo = leerListaDeComandos(input);
+    inputTipo = leerListaDeComandos(input, cmdCheat);
     if (inputTipo == Input::QUITAR) return Input::QUITAR;
-    if (inputTipo == Input::DEBUG) return Input::DEBUG;
+    if (inputTipo == Input::CHEAT) return Input::CHEAT;
     if (esDigitos(input) == true) {
         y = stoi(input);
     }
     else return Input::BAD;
     return Input::OK;
 }
+
 Input ingresarDatos(char& value, int offsetX, int offsetY) {
     std::string input;
-    Input inputTipo;
     rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + offsetY);
     std::cin >> input;
-    inputTipo = leerListaDeComandos(input);
-    if (inputTipo == Input::QUITAR) return Input::QUITAR;
-    if (inputTipo == Input::DEBUG) return Input::DEBUG;
+    if (input == ":q") return Input::QUITAR;
     value = strToRespuesta(input);
     if (value == '0') return Input::BAD;
     return Input::OK;
@@ -576,34 +851,59 @@ std::string setearCondicion(Resultados condicion) {
     std::string str;
     if (condicion == Resultados::VICTORIA) {
         str = R"(
-                ____   ____.__        __               .__        
-                \   \ /   /|__| _____/  |_  ___________|__|____   
-                 \   Y   / |  |/ ___\   __\/  _ \_  __ \  \__  \  
+                ____   ____.__        __               .__
+                \   \ /   /|__| _____/  |_  ___________|__|____
+                 \   Y   / |  |/ ___\   __\/  _ \_  __ \  \__  \
                   \     /  |  \  \___|  | (  <_> )  | \/  |/ __ \_
                    \___/   |__|\___  >__|  \____/|__|  |__(____  /
                                    \/                          \/ )";
     }
     else if (condicion == Resultados::DERROTA) {
         str = R"(
-                ________                              __          
-                \______ \   __________________  _____/  |______   
-                 |    |  \_/ __ \_  __ \_  __ \/  _ \   __\__  \  
+                ________                              __
+                \______ \   __________________  _____/  |______
+                 |    |  \_/ __ \_  __ \_  __ \/  _ \   __\__  \
                  |    `   \  ___/|  | \/|  | \(  <_> )  |  / __ \_
                 /_______  /\___  >__|   |__|   \____/|__| (____  /
-                        \/     \/                              \/ 
+                        \/     \/                              \/
 )";
     }
     else if (condicion == Resultados::TRAMPOSO) {
         str = R"(
-                 _____                                         
-                |_   _|                                        
-                  | |_ __ __ _ _ __ ___  _ __   ___  ___  ___  
-                  | | '__/ _` | '_ ` _ \| '_ \ / _ \/ __|/ _ \ 
+                 _____
+                |_   _|
+                  | |_ __ __ _ _ __ ___  _ __   ___  ___  ___
+                  | | '__/ _` | '_ ` _ \| '_ \ / _ \/ __|/ _ \
                   | | | | (_| | | | | | | |_) | (_) \__ \ (_) |
-                  \_/_|  \__,_|_| |_| |_| .__/ \___/|___/\___/ 
-                                        | |                    
-                                        |_|                      
+                  \_/_|  \__,_|_| |_| |_| .__/ \___/|___/\___/
+                                        | |
+                                        |_|
         )";
     }
     return str;
+}
+
+void mostrarSplashScreen(int offsetX, int offsetY) {
+    std::string str;
+    str = R"(
+ ___         _   _   _              _                  
+(  _ \      ( )_( )_(_ )           ( )    _            
+| (_) )  _ _|  _)  _)| |   __   ___| |__ (_)_ _    ___ 
+|  _ ( / _  ) | | |  | | / __ \  __)  _  \ |  _ \/  __)
+| (_) ) (_| | |_| |_ | |(  ___/__  \ | | | | (_) )__  \
+(____/ \__ _)\__)\__)___)\____)____/_) (_)_)  __/(____/
+                                           | |         
+                                           (_)         
+
+                
+        )";
+    system("cls");
+    rlutil::locate(POSICION_MATRIX_X + offsetX - 18, POSICION_MATRIX_Y + offsetY + 8);
+    mostrarTextoAnimado("Un proyecto para Laboratorio 2 - Rodriguez Ivan (2021)", DuracionAnim::LENTO);
+    Sleep(1100);
+    system("cls");
+    rlutil::locate(POSICION_MATRIX_X + offsetX, POSICION_MATRIX_Y + offsetY);
+    std::cout << str;
+    std::cout << "Presione cualquier tecla para continuar...";
+    system("pause>nul");
 }

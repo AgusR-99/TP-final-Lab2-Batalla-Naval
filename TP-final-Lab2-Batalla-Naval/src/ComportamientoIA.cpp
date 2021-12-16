@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <vector>
 #include "Matriz.h"
 #include "Enums.h"
 #include "FuncsMulti.h"

@@ -70,3 +70,125 @@
 	<sys/types.h>
 	<sys/time.h>
 
+1636240873 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\comportamientoia.cpp
+	<cstdlib>
+	<ctime>
+	<iostream>
+	"Matriz.h"
+	"Enums.h"
+	"FuncsMulti.h"
+	"ComportamientoIA.h"
+
+1636089486 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\matriz.h
+	<assert.h>
+	<iostream>
+	<string>
+	"Elemento.h"
+	"Enums.h"
+
+1636089304 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\elemento.h
+	"Nave.h"
+	<string>
+
+1636080460 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\nave.h
+	<string>
+
+1639636430 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\enums.h
+
+1636240920 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\funcsmulti.h
+
+1636240889 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\comportamientoia.h
+
+1636247848 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\constantes.cpp
+	"Constantes.h"
+
+1638836709 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\constantes.h
+
+1636089305 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\elemento.cpp
+	"Elemento.h"
+
+1636242821 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\funcsmulti.cpp
+	<cstdlib>
+	<iostream>
+	<string>
+	<vector>
+	<ctime>
+	<Windows.h>
+	<mmsystem.h>
+	"Nave.h"
+	"Matriz.h"
+	"UI.h"
+	"Enums.h"
+	"Constantes.h"
+	"ComportamientoIA.h"
+	"FuncsMulti.h"
+
+1638300357 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\ui.h
+	"Jugador.h"
+	"Nave.h"
+	"Matriz.h"
+	"Elemento.h"
+	"Constantes.h"
+	"rlutil.h"
+	"SharedFuncs.h"
+
+1636079535 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\jugador.h
+	<stdio.h>
+	<string>
+
+1639631757 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\rlutil.h
+	<iostream>
+	<string>
+	<cstdio>
+	<stdio.h>
+	<string.h>
+	<windows.h>
+	<conio.h>
+	<termios.h>
+	<unistd.h>
+	<sys/ioctl.h>
+	<sys/types.h>
+	<sys/time.h>
+
+1636242301 c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\sharedfuncs.h
+	<Windows.h>
+
+1636242821 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\jugador.cpp
+	"Jugador.h"
+	"Constantes.h"
+	"rlutil.h"
+
+1636242821 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\matriz.cpp
+	"Matriz.h"
+	"Nave.h"
+	"rlutil.h"
+	"Enums.h"
+	"Constantes.h"
+
+1636080444 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\nave.cpp
+	"Nave.h"
+
+1636242315 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\sharedfuncs.cpp
+	"SharedFuncs.h"
+
+1638306292 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\ui.cpp
+	<iostream>
+	<string>
+	<sstream>
+	<vector>
+	<iomanip>
+	<Windows.h>
+	"UI.h"
+
+1638222838 source:c:\users\agus-\source\repos\tp-final-lab2-batalla-naval\tp-final-lab2-batalla-naval\src\tp-final-lab2-batalla-naval.cpp
+	<windows.h>
+	<time.h>
+	<cstdio>
+	<mmsystem.h>
+	<cwchar>
+	<sstream>
+	"rlutil.h"
+	"Enums.h"
+	"UI.h"
+	"FuncsMulti.h"
+

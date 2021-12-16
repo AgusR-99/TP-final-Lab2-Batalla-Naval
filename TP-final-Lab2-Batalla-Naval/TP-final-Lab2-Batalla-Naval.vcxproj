@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Cheat.cpp" />
     <ClCompile Include="src\SharedFuncs.cpp" />
     <ClCompile Include="src\Constantes.cpp" />
     <ClCompile Include="src\ComportamientoIA.cpp" />
@@ -158,6 +159,8 @@
     <ClCompile Include="src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Consola.h" />
+    <ClInclude Include="src\Cheat.h" />
     <ClInclude Include="src\Constantes.h" />
     <ClInclude Include="src\Enums.h" />
     <ClInclude Include="src\ComportamientoIA.h" />
@@ -174,6 +177,16 @@
   <ItemGroup>
     <None Include="Gamemode Singleplayer\juegos.dat" />
     <None Include="TP-final-Lab2-Batalla-Naval.cbp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="music\battle.wav" />
+    <Media Include="music\cheater.wav" />
+    <Media Include="music\climax.wav" />
+    <Media Include="music\defeat.wav" />
+    <Media Include="music\menu.wav" />
+    <Media Include="music\placement.wav" />
+    <Media Include="music\transition.wav" />
+    <Media Include="music\victory.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
